@@ -61,6 +61,12 @@
             <version>11.0.11</version>
             <scope>provided</scope>
         </dependency>
+        <!--  Driver MySQL  -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.33</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

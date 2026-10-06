@@ -27,5 +27,6 @@ buildNumber.properties
 
 
 /backend/target/
+/backend/db.properties
 /backend/nbproject/private/
 backend/private/
