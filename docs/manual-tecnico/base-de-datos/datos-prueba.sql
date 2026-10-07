@@ -45,4 +45,4 @@ WHERE e.id_año_lectivo IS NULL;
 
 
 INSERT INTO usuario (correo, contraseña_hash, rol, estado)
-  VALUES ('superadmin@colegio.edu', '123', 'Super Admin', 'Activo');
+  VALUES ('superadmin@colegio.edu', 'MTIz', 'Super Admin', 'Activo');

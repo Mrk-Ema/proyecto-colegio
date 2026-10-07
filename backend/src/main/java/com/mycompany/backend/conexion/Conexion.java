@@ -23,7 +23,7 @@ public class Conexion {
     private static final String ARCHIVO_CONFIG = "db.properties";
     private static final String URL_DEFAULT = "jdbc:mysql://localhost:3306/colegio?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8";
     private static final String USUARIO_DEFAULT = "mrk";
-    private static final String PASSWORD_DEFAULT = "camnbiar-en-resource";
+    private static final String PASSWORD_DEFAULT = "cambiar-en-resource";
 
     private static String url = URL_DEFAULT;
     private static String usuario = USUARIO_DEFAULT;
