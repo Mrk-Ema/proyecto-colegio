@@ -1,0 +1,30 @@
+<h3>Editar perfil</h3>
+<div style="max-width: 520px;">
+  <div class="mb-3">
+    <label class="form-label">Correo</label>
+    <input class="form-control" [(ngModel)]="correo" type="email">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Nombres</label>
+    <input class="form-control" [(ngModel)]="nombres">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Apellidos</label>
+    <input class="form-control" [(ngModel)]="apellidos">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Teléfono</label>
+    <input class="form-control" inputmode="numeric" maxlength="8" (keypress)="soloNumeros($event)" [(ngModel)]="telefono">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Dirección</label>
+    <input class="form-control" [(ngModel)]="direccion">
+  </div>
+  @if (mensaje) {
+    <div class="alert alert-success">{{ mensaje }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+  <button class="btn btn-primary" (click)="guardar()">Guardar</button>
+</div>
