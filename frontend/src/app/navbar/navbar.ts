@@ -19,6 +19,7 @@ export class Navbar {
   menu: OpcionMenu[] = [
     { ruta: '/inicio', texto: 'Inicio', roles: ['Super Admin', 'Admin', 'Secretaria', 'Maestro', 'Bibliotecario', 'Estudiante'] },
     { ruta: '/usuarios', texto: 'Usuarios', roles: ['Super Admin', 'Admin'] },
+    { ruta: '/anios', texto: 'Años lectivos', roles: ['Super Admin', 'Admin'] },
     { ruta: '/perfil', texto: 'Mi perfil', roles: ['Super Admin', 'Admin', 'Secretaria', 'Maestro', 'Bibliotecario', 'Estudiante'] },
   ];
 

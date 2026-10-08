@@ -1,0 +1,28 @@
+<h3>{{ esEditar ? 'Modificar año lectivo' : 'Nuevo año lectivo' }}</h3>
+<div style="max-width: 520px;">
+  <div class="mb-3">
+    <label class="form-label">Año</label>
+    <input class="form-control" [(ngModel)]="anio" type="number" [disabled]="esEditar">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Fecha inicio</label>
+    <input class="form-control" [(ngModel)]="fechaInicio" type="date" [min]="minFecha()" [max]="maxFecha()">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Fecha cierre</label>
+    <input class="form-control" [(ngModel)]="fechaCierre" type="date" [min]="minFecha()" [max]="maxFecha()">
+  </div>
+  @if (!esEditar) {
+    <label class="form-label">Grados del año</label>
+    @for (g of grados; track g.idGrado) {
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [checked]="g.marcado" (change)="alternar(g)" id="g{{ g.idGrado }}">
+        <label class="form-check-label" for="g{{ g.idGrado }}">{{ g.nombre }} ({{ g.nivel }})</label>
+      </div>
+    }
+  }
+  @if (error) {
+    <div class="alert alert-danger mt-2">{{ error }}</div>
+  }
+  <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>

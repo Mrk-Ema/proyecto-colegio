@@ -1,0 +1,20 @@
+<h3>Años lectivos</h3>
+<a class="btn btn-primary btn-sm mb-3" routerLink="/anios/nuevo">Nuevo año</a>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+<table class="table table-striped">
+  <thead><tr><th>Año</th><th>Inicio</th><th>Cierre</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    @for (a of anios; track a.anio) {
+      <tr>
+        <td>{{ a.anio }}</td><td>{{ a.fechaInicio }}</td>
+        <td>{{ a.fechaCierre }}</td><td>{{ a.estado }}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/anios', a.anio]">Ver</a>
+          <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/anios', a.anio, 'editar']">Editar</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

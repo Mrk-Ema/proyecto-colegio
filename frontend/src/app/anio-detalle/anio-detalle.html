@@ -1,0 +1,15 @@
+@if (datos) {
+  <h3>Año lectivo {{ datos.anio }} <span class="badge bg-secondary">{{ datos.estado }}</span></h3>
+  <p>Del {{ datos.fechaInicio }} al {{ datos.fechaCierre }}</p>
+  <h5>Estructura ({{ datos.estructura.length }} grados)</h5>
+  <ul class="list-group" style="max-width: 520px;">
+    @for (e of datos.estructura; track e.idEstructura) {
+      <li class="list-group-item">{{ e.grado }}</li>
+    }
+  </ul>
+  <a class="btn btn-outline-secondary btn-sm mt-3 me-2" routerLink="/anios">Volver</a>
+  <a class="btn btn-outline-secondary btn-sm mt-3" [routerLink]="['/anios', datos.anio, 'editar']">Modificar fechas</a>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
