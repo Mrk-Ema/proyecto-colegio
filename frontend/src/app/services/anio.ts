@@ -26,6 +26,25 @@ export class Anio {
     return this.http.put<{ mensaje: string }>(`${this.api}/${anio}`, datos);
   }
 
+  activar(anio: number) {
+    return this.http.put<{ mensaje: string }>(`${this.api}/${anio}/activar`, {});
+  }
+
+  cerrar(anio: number) {
+    return this.http.put<{ mensaje: string }>(`${this.api}/${anio}/cerrar`, {});
+  }
+
+  eliminar(anio: number) {
+    return this.http.delete<{ mensaje: string }>(`${this.api}/${anio}`);
+  }
+
+  actualizarEstructura(anio: number, grados: number[]) {
+    return this.http.put<{ mensaje: string }>(
+      'http://localhost:8080/backend/api/v1/estructura/' + anio,
+      { grados },
+    );
+  }
+
   listarGrados() {
     return this.http.get<any[]>(this.apiGrados);
   }

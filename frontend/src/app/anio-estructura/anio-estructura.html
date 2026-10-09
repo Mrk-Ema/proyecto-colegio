@@ -1,0 +1,12 @@
+<h3>Estructura del año {{ anio }}</h3>
+<p class="text-muted">Marca los grados que llevará. Quitar uno con inscripciones será rechazado.</p>
+@for (g of grados; track g.idGrado) {
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" [checked]="estaMarcado(g.idGrado)" (change)="alternar(g.idGrado)" id="e{{ g.idGrado }}">
+    <label class="form-check-label" for="e{{ g.idGrado }}">{{ g.nombre }} ({{ g.nivel }})</label>
+  </div>
+}
+@if (error) {
+  <div class="alert alert-danger mt-2">{{ error }}</div>
+}
+<button class="btn btn-primary mt-2" (click)="guardar()">Guardar estructura</button>

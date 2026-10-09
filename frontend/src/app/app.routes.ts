@@ -10,6 +10,7 @@ import { Recuperar } from './recuperar/recuperar';
 import { Anios } from './anios/anios';
 import { AnioForm } from './anio-form/anio-form';
 import { AnioDetalle } from './anio-detalle/anio-detalle';
+import { AnioEstructura } from './anio-estructura/anio-estructura';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'anios', component: Anios, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'anios/nuevo', component: AnioForm, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'anios/:anio/editar', component: AnioForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'anios/:anio/estructura', component: AnioEstructura, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'anios/:anio', component: AnioDetalle, data: { roles: ['Super Admin', 'Admin'] } },
     ],
   },

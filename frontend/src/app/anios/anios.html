@@ -12,7 +12,14 @@
         <td>{{ a.fechaCierre }}</td><td>{{ a.estado }}</td>
         <td>
           <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/anios', a.anio]">Ver</a>
-          <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/anios', a.anio, 'editar']">Editar</a>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/anios', a.anio, 'editar']">Editar</a>
+          @if (a.estado === 'Planificado') {
+            <button class="btn btn-sm btn-outline-success me-1" (click)="activar(a)">Activar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="eliminar(a)">Eliminar</button>
+          }
+          @if (a.estado === 'Activo') {
+            <button class="btn btn-sm btn-outline-warning" (click)="cerrar(a)">Cerrar</button>
+          }
         </td>
       </tr>
     }
