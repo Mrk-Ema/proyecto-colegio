@@ -30,8 +30,7 @@ public class EstructuraDAO {
     public List<Integer> listarGradosDefecto() throws SQLException {
         String sql = "SELECT id_grado FROM estructura_año WHERE id_año_lectivo IS NULL";
         Connection cn = Conexion.obtener();
-        try (PreparedStatement ps = cn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = cn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             List<Integer> grados = new ArrayList<>();
             while (rs.next()) {
                 grados.add(rs.getInt("id_grado"));
@@ -58,6 +57,15 @@ public class EstructuraDAO {
                 }
                 return lista;
             }
+        }
+    }
+
+    public void eliminar(int idEstructura) throws SQLException {
+        String sql = "DELETE FROM estructura_año WHERE id_estructura = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            ps.executeUpdate();
         }
     }
 }

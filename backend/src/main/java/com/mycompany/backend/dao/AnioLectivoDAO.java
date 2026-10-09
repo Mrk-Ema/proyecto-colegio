@@ -77,6 +77,38 @@ public class AnioLectivoDAO {
         }
     }
 
+    public void actualizarEstado(int anio, String estado) throws SQLException {
+        String sql = "UPDATE año_lectivo SET estado = ? WHERE id_año_lectivo = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, estado);
+            ps.setInt(2, anio);
+            ps.executeUpdate();
+        }
+    }
+
+    public AnioLectivo buscarActivo() throws SQLException {
+        String sql = "SELECT id_año_lectivo, fecha_inicio, fecha_cierre, estado "
+                + "FROM año_lectivo WHERE estado = 'Activo' LIMIT 1";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return mapear(rs);
+            }
+            return null;
+        }
+    }
+
+    public void eliminar(int anio) throws SQLException {
+        String sql = "DELETE FROM año_lectivo WHERE id_año_lectivo = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, anio);
+            ps.executeUpdate();
+        }
+    }
+
     private AnioLectivo mapear(ResultSet rs) throws SQLException {
         AnioLectivo a = new AnioLectivo();
         a.setAnio(rs.getInt("id_año_lectivo"));

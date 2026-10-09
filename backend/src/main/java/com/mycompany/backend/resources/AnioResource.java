@@ -2,6 +2,7 @@ package com.mycompany.backend.resources;
 
 import com.mycompany.backend.service.AnioService;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -19,7 +20,6 @@ import java.util.Map;
  * GET /api/v1/anios/{anio}          detalle con estructura, puro filtro
  * POST /api/v1/anios                {anio, fechaInicio, fechaCierre, grados[]}  para crear el año
  * PUT /api/v1/anios/{anio}          {fechaInicio, fechaCierre} para modificar el año
- * Requiere token (filtro); fechas en ISO AAAA-MM-DD.
  */
 @Path("anios")
 public class AnioResource {
@@ -91,6 +91,60 @@ public class AnioResource {
                     .entity(Map.of("error", e.getMessage())).build();
         } catch (Exception e) {
             System.out.println("Error al modificar año lectivo");
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error", "Error interno")).build();
+        }
+    }
+
+    @PUT
+    @Path("{anio}/activar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response activar(@PathParam("anio") int anio) {
+        try {
+            servicio.activar(anio);
+            return Response.ok(Map.of("mensaje", "Año lectivo activado")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", e.getMessage())).build();
+        } catch (Exception e) {
+            System.out.println("Error al activar año lectivo");
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error", "Error interno")).build();
+        }
+    }
+
+    @PUT
+    @Path("{anio}/cerrar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cerrar(@PathParam("anio") int anio) {
+        try {
+            servicio.cerrar(anio);
+            return Response.ok(Map.of("mensaje", "Año lectivo cerrado")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", e.getMessage())).build();
+        } catch (Exception e) {
+            System.out.println("Error al cerrar año lectivo");
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error", "Error interno")).build();
+        }
+    }
+
+    @DELETE
+    @Path("{anio}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminar(@PathParam("anio") int anio) {
+        try {
+            servicio.eliminar(anio);
+            return Response.ok(Map.of("mensaje", "Año lectivo eliminado")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", e.getMessage())).build();
+        } catch (Exception e) {
+            System.out.println("Error al eliminar año lectivo");
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", "Error interno")).build();

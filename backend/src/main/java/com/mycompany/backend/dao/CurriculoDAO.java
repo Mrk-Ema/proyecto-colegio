@@ -37,4 +37,13 @@ public class CurriculoDAO {
             ps.executeUpdate();
         }
     }
+
+    public void eliminarPorEstructura(int idEstructura) throws SQLException {
+        String sql = "DELETE FROM curriculo WHERE id_estructura = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            ps.executeUpdate();
+        }
+    }
 }
