@@ -46,4 +46,17 @@ public class CurriculoDAO {
             ps.executeUpdate();
         }
     }
+
+    public boolean existeEnEstructura(int idEstructura, int idCurso) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM curriculo WHERE id_estructura = ? AND id_curso = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            ps.setInt(2, idCurso);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1) > 0;
+            }
+        }
+    }
 }

@@ -20,6 +20,7 @@ public class CorsFilter implements ContainerRequestFilter, ContainerResponseFilt
         }
     }
 
+    //en web.xml debo configurar las url al sevrlet decirle todo loq ue venga del localhost permitales lo que s ehace en web.xml 
     @Override
     public void filter(ContainerRequestContext request, ContainerResponseContext response) {
         response.getHeaders().putSingle("Access-Control-Allow-Origin", "http://localhost:4200");

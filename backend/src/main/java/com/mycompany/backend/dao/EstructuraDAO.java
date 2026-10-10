@@ -68,4 +68,28 @@ public class EstructuraDAO {
             ps.executeUpdate();
         }
     }
+
+    public Integer buscarDefectoPorGrado(int idGrado) throws SQLException {
+        String sql = "SELECT id_estructura FROM estructura_año WHERE id_año_lectivo IS NULL AND id_grado = ? LIMIT 1";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idGrado);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : null;
+            }
+        }
+    }
+
+    public int crearDefecto(int idGrado) throws SQLException {
+        String sql = "INSERT INTO estructura_año (id_año_lectivo, id_grado) VALUES (NULL, ?)";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, idGrado);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+    }
 }
