@@ -1,0 +1,19 @@
+<h3>{{ esEditar ? 'Modificar carrera' : 'Nueva carrera' }}</h3>
+<div style="max-width: 520px;">
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    <input class="form-control" [(ngModel)]="nombre" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Descripción</label>
+    <input class="form-control" [(ngModel)]="descripcion" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Duración en años (opcional)</label>
+    <input class="form-control" [(ngModel)]="duracionAnios" type="number" />
+  </div>
+  @if (error) {
+    <div class="alert alert-danger mt-2">{{ error }}</div>
+  }
+  <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>

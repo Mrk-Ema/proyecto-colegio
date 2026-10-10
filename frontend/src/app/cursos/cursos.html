@@ -1,0 +1,54 @@
+<h3>Cursos</h3>
+<a class="btn btn-primary btn-sm mb-3" routerLink="/cursos/nuevo">Nuevo curso</a>
+<div class="row g-2 mb-3">
+  <div class="col">
+    <input class="form-control" placeholder="Nombre" [(ngModel)]="nombre" />
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="estado">
+      <option value="">Todos</option>
+      <option value="Activo">Activo</option>
+      <option value="Inactivo">Inactivo</option>
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="grado">
+      <option [ngValue]="null">Todos los grados</option>
+      @for (g of grados; track g.idGrado) {
+        <option [ngValue]="g.idGrado">{{ g.nombre }} ({{ g.nivel }})</option>
+      }
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+  </div>
+</div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+<table class="table table-striped">
+  <thead><tr><th>Nombre</th><th>Grado</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    @for (c of datos; track c.idCurso + '-' + c.idGrado) {
+      <tr>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.grado }}</td>
+        <td>{{ c.estado }}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/cursos', c.idCurso, 'editar']">Editar</a>
+          @if (c.estado === 'Activo') {
+            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(c)">Desactivar</button>
+          }
+          @if (c.estado === 'Inactivo') {
+            <button class="btn btn-sm btn-outline-success" (click)="activar(c)">Activar</button>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }}</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>
