@@ -15,6 +15,10 @@ import { Carreras } from './carreras/carreras';
 import { CarreraForm } from './carrera-form/carrera-form';
 import { Cursos } from './cursos/cursos';
 import { CursoForm } from './curso-form/curso-form';
+import { Grados } from './grados/grados';
+import { GradoForm } from './grado-form/grado-form';
+import { Secciones } from './secciones/secciones';
+import { SeccionForm } from './seccion-form/seccion-form';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -39,6 +43,12 @@ export const routes: Routes = [
       { path: 'cursos', component: Cursos, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'cursos/nuevo', component: CursoForm, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'cursos/:id/editar', component: CursoForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'grados', component: Grados, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'grados/nuevo', component: GradoForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'grados/:id/editar', component: GradoForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'secciones', component: Secciones, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'secciones/nuevo', component: SeccionForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'secciones/:id/editar', component: SeccionForm, data: { roles: ['Super Admin', 'Admin'] } },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -1,0 +1,72 @@
+<h3>Grados</h3>
+<a class="btn btn-primary btn-sm mb-3" routerLink="/grados/nuevo">Nuevo grado</a>
+<div class="row g-2 mb-3">
+  <div class="col">
+    <input class="form-control" placeholder="Nombre" [(ngModel)]="nombre" />
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="nivel">
+      <option [ngValue]="null">Todos los niveles</option>
+      @for (n of niveles; track n.idNivel) {
+        <option [ngValue]="n.idNivel">{{ n.nombre }}</option>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="carrera">
+      <option [ngValue]="null">Todas las carreras</option>
+      @for (c of carreras; track c.idCarrera) {
+        <option [ngValue]="c.idCarrera">{{ c.nombre }}</option>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="estado">
+      <option value="">Todos</option>
+      <option value="Activo">Activo</option>
+      <option value="Inactivo">Inactivo</option>
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="anio">
+      <option value="">Todos</option>
+      <option value="defecto">Estructura por defecto</option>
+      @for (a of anios; track a.anio) {
+        <option [value]="a.anio">{{ a.anio }}</option>
+      }
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+  </div>
+</div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+<table class="table table-striped">
+  <thead><tr><th>Nombre</th><th>Nivel</th><th>Carrera</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    @for (g of datos; track g.idGrado) {
+      <tr>
+        <td>{{ g.nombre }}</td>
+        <td>{{ g.nivel }}</td>
+        <td>{{ g.carrera }}</td>
+        <td>{{ g.estado }}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/grados', g.idGrado, 'editar']">Editar</a>
+          @if (g.estado === 'Activo') {
+            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(g)">Desactivar</button>
+          }
+          @if (g.estado === 'Inactivo') {
+            <button class="btn btn-sm btn-outline-success" (click)="activar(g)">Activar</button>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>

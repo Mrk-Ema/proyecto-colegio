@@ -50,6 +50,39 @@ export class Cursos implements OnInit {
     this.cargar();
   }
 
+  esDiversificado(nivel: string): boolean {
+    return (nivel ?? '').toLowerCase().includes('diversif');
+  }
+
+  gruposGrados(): any[] {
+    const porNivel = new Map<string, any[]>();
+    for (const g of this.grados) {
+      if (!porNivel.has(g.nivel)) {
+        porNivel.set(g.nivel, []);
+      }
+      porNivel.get(g.nivel)!.push(g);
+    }
+    const grupos: any[] = [];
+    for (const [nivel, lista] of porNivel) {
+      if (this.esDiversificado(nivel)) {
+        const porCarrera = new Map<string, any[]>();
+        for (const g of lista) {
+          const c = g.carrera ?? 'Sin carrera';
+          if (!porCarrera.has(c)) {
+            porCarrera.set(c, []);
+          }
+          porCarrera.get(c)!.push(g);
+        }
+        for (const [carrera, gs] of porCarrera) {
+          grupos.push({ etiqueta: `${nivel} — ${carrera}`, opciones: gs });
+        }
+      } else {
+        grupos.push({ etiqueta: nivel, opciones: lista });
+      }
+    }
+    return grupos;
+  }
+
   anterior() {
     if (this.page > 1) {
       this.page--;

@@ -1,0 +1,55 @@
+<h3>{{ esEditar ? 'Modificar grado' : 'Nuevo grado' }}</h3>
+<div style="max-width: 520px;">
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    <input class="form-control" [(ngModel)]="nombre" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Nivel</label>
+    <select class="form-select" [(ngModel)]="idNivel" [disabled]="bloqueado">
+      <option [ngValue]="null">Seleccione</option>
+      @for (n of niveles; track n.idNivel) {
+        <option [ngValue]="n.idNivel">{{ n.nombre }}</option>
+      }
+    </select>
+    @if (bloqueado) {
+      <div class="form-text">Nivel bloqueado: el grado ya tiene secciones, currículo o inscripciones.</div>
+    }
+  </div>
+  @if (esDiversificado()) {
+    <div class="mb-3">
+      <label class="form-label">Carrera (Diversificado)</label>
+      <select class="form-select" [(ngModel)]="idCarrera" [disabled]="bloqueado">
+        <option [ngValue]="null">Seleccione</option>
+        @for (c of carreras; track c.idCarrera) {
+          <option [ngValue]="c.idCarrera">{{ c.nombre }}</option>
+        }
+      </select>
+    </div>
+  }
+  @if (!esEditar) {
+    <div class="mb-3">
+      <label class="form-label">Destino (opcional)</label>
+      <select class="form-select" [(ngModel)]="destinoTipo">
+        <option value="">Solo catálogo</option>
+        <option value="defecto">Estructura por defecto</option>
+        <option value="anio">Año lectivo</option>
+      </select>
+    </div>
+    @if (destinoTipo === 'anio') {
+      <div class="mb-3">
+        <label class="form-label">Año lectivo (no cerrado)</label>
+        <select class="form-select" [(ngModel)]="destinoAnio">
+          <option value="">Seleccione</option>
+          @for (a of anios; track a.anio) {
+            <option [value]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+          }
+        </select>
+      </div>
+    }
+  }
+  @if (error) {
+    <div class="alert alert-danger mt-2">{{ error }}</div>
+  }
+  <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>

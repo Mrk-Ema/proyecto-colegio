@@ -45,6 +45,47 @@ export class AnioForm implements OnInit {
     g.marcado = !g.marcado;
   }
 
+  esDiversificado(nivel: string): boolean {
+    return (nivel ?? '').toLowerCase().includes('diversif');
+  }
+
+  grupos(): any[] {
+    const niveles: any[] = [];
+    const porNivel = new Map<string, any[]>();
+    for (const g of this.grados) {
+      if (!porNivel.has(g.nivel)) {
+        porNivel.set(g.nivel, []);
+      }
+      porNivel.get(g.nivel)!.push(g);
+    }
+    for (const [nivel, lista] of porNivel) {
+      if (this.esDiversificado(nivel)) {
+        const porCarrera = new Map<string, any[]>();
+        for (const g of lista) {
+          const c = g.carrera ?? 'Sin carrera';
+          if (!porCarrera.has(c)) {
+            porCarrera.set(c, []);
+          }
+          porCarrera.get(c)!.push(g);
+        }
+        for (const [carrera, gs] of porCarrera) {
+          niveles.push({ titulo: `${nivel} — ${carrera}`, filas: this.trozos(gs, 3) });
+        }
+      } else {
+        niveles.push({ titulo: nivel, filas: this.trozos(lista, 3) });
+      }
+    }
+    return niveles;
+  }
+
+  private trozos<T>(arr: T[], n: number): T[][] {
+    const r: T[][] = [];
+    for (let i = 0; i < arr.length; i += n) {
+      r.push(arr.slice(i, i + n));
+    }
+    return r;
+  }
+
   minFecha(): string | null {
     return this.anio ? `${this.anio}-01-01` : null;
   }

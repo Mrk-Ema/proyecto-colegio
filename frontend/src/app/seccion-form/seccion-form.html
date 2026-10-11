@@ -1,0 +1,27 @@
+<h3>{{ esEditar ? 'Modificar sección' : 'Nueva sección' }}</h3>
+<div style="max-width: 520px;">
+  <div class="mb-3">
+    <label class="form-label">Grado</label>
+    <select class="form-select" [(ngModel)]="idGrado" [disabled]="esEditar">
+      <option [ngValue]="null">Seleccione</option>
+      @for (grupo of gruposGrados(); track grupo.etiqueta) {
+        <optgroup [label]="grupo.etiqueta">
+          @for (g of grupo.opciones; track g.idGrado) {
+            <option [ngValue]="g.idGrado">{{ g.nombre }}</option>
+          }
+        </optgroup>
+      }
+    </select>
+    @if (esEditar) {
+      <div class="form-text">El grado no se cambia (CU026).</div>
+    }
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    <input class="form-control" [(ngModel)]="nombre" />
+  </div>
+  @if (error) {
+    <div class="alert alert-danger mt-2">{{ error }}</div>
+  }
+  <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>

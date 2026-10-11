@@ -14,8 +14,12 @@
   <div class="col">
     <select class="form-select" [(ngModel)]="grado">
       <option [ngValue]="null">Todos los grados</option>
-      @for (g of grados; track g.idGrado) {
-        <option [ngValue]="g.idGrado">{{ g.nombre }} ({{ g.nivel }})</option>
+      @for (grupo of gruposGrados(); track grupo.etiqueta) {
+        <optgroup [label]="grupo.etiqueta">
+          @for (g of grupo.opciones; track g.idGrado) {
+            <option [ngValue]="g.idGrado">{{ g.nombre }}</option>
+          }
+        </optgroup>
       }
     </select>
   </div>
