@@ -34,4 +34,18 @@ public class InscripcionDAO {
             }
         }
     }
+
+    public boolean existePorSeccionEnActivo(int idSeccion) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM inscripcion i "
+                + "JOIN año_lectivo a ON a.id_año_lectivo = i.id_año_lectivo AND a.estado = 'Activo' "
+                + "WHERE i.id_seccion = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idSeccion);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1) > 0;
+            }
+        }
+    }
 }

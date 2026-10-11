@@ -44,7 +44,7 @@ CREATE TABLE estudiante (
   alergias         VARCHAR(255) NULL,
   padecimientos    VARCHAR(255) NULL,
   estado           ENUM('Activo','Inactivo','Graduado') NOT NULL DEFAULT 'Activo',
-  id_usuario       INT NULL UNIQUE,
+  id_usuario       INT NOT NULL UNIQUE,
   CONSTRAINT fk_estudiante_usuario FOREIGN KEY (id_usuario)
     REFERENCES usuario (id_usuario)
     ON UPDATE CASCADE ON DELETE RESTRICT
