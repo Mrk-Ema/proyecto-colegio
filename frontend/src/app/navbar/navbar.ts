@@ -24,6 +24,7 @@ export class Navbar {
     { ruta: '/cursos', texto: 'Cursos', roles: ['Super Admin', 'Admin'] },
     { ruta: '/grados', texto: 'Grados', roles: ['Super Admin', 'Admin'] },
     { ruta: '/secciones', texto: 'Secciones', roles: ['Super Admin', 'Admin'] },
+    { ruta: '/curriculo', texto: 'Currículo', roles: ['Super Admin', 'Admin'] },
     { ruta: '/perfil', texto: 'Mi perfil', roles: ['Super Admin', 'Admin', 'Secretaria', 'Maestro', 'Bibliotecario', 'Estudiante'] },
   ];
 

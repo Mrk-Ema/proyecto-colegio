@@ -19,6 +19,7 @@ import { Grados } from './grados/grados';
 import { GradoForm } from './grado-form/grado-form';
 import { Secciones } from './secciones/secciones';
 import { SeccionForm } from './seccion-form/seccion-form';
+import { CurriculoComp } from './curriculo/curriculo';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -49,6 +50,7 @@ export const routes: Routes = [
       { path: 'secciones', component: Secciones, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'secciones/nuevo', component: SeccionForm, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'secciones/:id/editar', component: SeccionForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'curriculo', component: CurriculoComp, data: { roles: ['Super Admin', 'Admin'] } },
     ],
   },
   { path: '**', redirectTo: '' },
