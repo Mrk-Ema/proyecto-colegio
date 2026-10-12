@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CurriculoDAO {
 
@@ -57,6 +59,51 @@ public class CurriculoDAO {
                 rs.next();
                 return rs.getInt(1) > 0;
             }
+        }
+    }
+
+    public List<Map<String, Object>> listarPorEstructura(int idEstructura) throws SQLException {
+        String sql = "SELECT c.id_curso, c.nombre, c.estado FROM curriculo cu "
+                + "JOIN curso c ON c.id_curso = cu.id_curso WHERE cu.id_estructura = ? ORDER BY c.nombre";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idCurso", rs.getInt("id_curso"));
+                    m.put("nombre", rs.getString("nombre"));
+                    m.put("estado", rs.getString("estado"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
+    public List<Integer> cursosDeEstructura(int idEstructura) throws SQLException {
+        String sql = "SELECT id_curso FROM curriculo WHERE id_estructura = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Integer> l = new ArrayList<>();
+                while (rs.next()) {
+                    l.add(rs.getInt(1));
+                }
+                return l;
+            }
+        }
+    }
+
+    public void eliminar(int idEstructura, int idCurso) throws SQLException {
+        String sql = "DELETE FROM curriculo WHERE id_estructura = ? AND id_curso = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            ps.setInt(2, idCurso);
+            ps.executeUpdate();
         }
     }
 }

@@ -89,6 +89,30 @@ public class CursoDAO {
         }
     }
 
+    public int contarActivos(java.util.List<Integer> ids) throws SQLException {
+        if (ids == null || ids.isEmpty()) {
+            return 0;
+        }
+        StringBuilder marcas = new StringBuilder();
+        for (int i = 0; i < ids.size(); i++) {
+            if (i > 0) {
+                marcas.append(",");
+            }
+            marcas.append("?");
+        }
+        String sql = "SELECT COUNT(*) FROM curso WHERE estado = 'Activo' AND id_curso IN (" + marcas + ")";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            for (int i = 0; i < ids.size(); i++) {
+                ps.setInt(i + 1, ids.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+    }
+
     public int contar(String nombre, String estado, Integer grado) throws SQLException {
         StringBuilder sb = new StringBuilder(
                 "SELECT COUNT(*) FROM curso c "

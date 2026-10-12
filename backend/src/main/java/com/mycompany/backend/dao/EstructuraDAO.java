@@ -92,4 +92,35 @@ public class EstructuraDAO {
             }
         }
     }
+
+    public Integer buscarPorGradoYAnio(int idGrado, int anio) throws SQLException {
+        String sql = "SELECT id_estructura FROM estructura_año WHERE id_grado = ? AND id_año_lectivo = ? LIMIT 1";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idGrado);
+            ps.setInt(2, anio);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : null;
+            }
+        }
+    }
+
+    public Map<String, Object> buscarEstructura(int idEstructura) throws SQLException {
+        String sql = "SELECT id_estructura, id_año_lectivo, id_grado FROM estructura_año WHERE id_estructura = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstructura);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                Map<String, Object> m = new HashMap<>();
+                m.put("idEstructura", rs.getInt(1));
+                int a = rs.getInt(2);
+                m.put("anio", rs.wasNull() ? null : a);
+                m.put("idGrado", rs.getInt(3));
+                return m;
+            }
+        }
+    }
 }
