@@ -37,7 +37,7 @@ export class GradoForm implements OnInit {
   ngOnInit() {
     this.api.listarNiveles().subscribe({ next: (n) => (this.niveles = n) });
     this.apiCarrera.listar(1, 100, '', 'Activo').subscribe({ next: (r) => (this.carreras = r.datos) });
-    this.apiAnio.listar().subscribe({ next: (a) => (this.anios = a) });
+    this.apiAnio.listar(1, 100).subscribe({ next: (r) => (this.anios = r.datos) });
     const p = this.route.snapshot.paramMap.get('id');
     if (p) {
       this.esEditar = true;

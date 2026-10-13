@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Anio } from '../services/anio';
 
 @Component({
   selector: 'colegio-anios',
-  imports: [RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './anios.html',
   styleUrl: './anios.css',
 })
@@ -12,6 +13,12 @@ export class Anios implements OnInit {
   anios: any[] = [];
   error: string = '';
   mensaje: string = '';
+  filtroAnio: number | null = null;
+  filtroEstado: string = '';
+  page: number = 1;
+  size: number = 10;
+  total: number = 0;
+  totalPaginas: number = 0;
 
   constructor(private api: Anio) {}
 
@@ -20,10 +27,33 @@ export class Anios implements OnInit {
   }
 
   cargar() {
-    this.api.listar().subscribe({
-      next: (res) => (this.anios = res),
+    this.api.listar(this.page, this.size, this.filtroAnio, this.filtroEstado).subscribe({
+      next: (r) => {
+        this.anios = r.datos;
+        this.total = r.total;
+        this.totalPaginas = r.totalPaginas;
+      },
       error: () => (this.error = 'No se pudo listar'),
     });
+  }
+
+  filtrar() {
+    this.page = 1;
+    this.cargar();
+  }
+
+  anterior() {
+    if (this.page > 1) {
+      this.page--;
+      this.cargar();
+    }
+  }
+
+  siguiente() {
+    if (this.page < this.totalPaginas) {
+      this.page++;
+      this.cargar();
+    }
   }
 
   activar(a: any) {

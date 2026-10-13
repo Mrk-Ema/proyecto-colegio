@@ -20,6 +20,8 @@ import { GradoForm } from './grado-form/grado-form';
 import { Secciones } from './secciones/secciones';
 import { SeccionForm } from './seccion-form/seccion-form';
 import { CurriculoComp } from './curriculo/curriculo';
+import { Asignaciones } from './asignaciones/asignaciones';
+import { AsignacionForm } from './asignacion-form/asignacion-form';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -51,6 +53,8 @@ export const routes: Routes = [
       { path: 'secciones/nuevo', component: SeccionForm, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'secciones/:id/editar', component: SeccionForm, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'curriculo', component: CurriculoComp, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'asignaciones', component: Asignaciones, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'asignaciones/nuevo', component: AsignacionForm, data: { roles: ['Super Admin', 'Admin'] } },
     ],
   },
   { path: '**', redirectTo: '' },

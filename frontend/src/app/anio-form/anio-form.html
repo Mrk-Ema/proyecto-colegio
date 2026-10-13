@@ -13,21 +13,25 @@
     <input class="form-control" [(ngModel)]="fechaCierre" type="date" [min]="minFecha()" [max]="maxFecha()">
   </div>
   @if (!esEditar) {
-    <h4 class="form-label">Grados que tendrá el año</h4>
+    <label class="form-label">Grados del año</label>
     @for (grupo of grupos(); track grupo.titulo) {
       <h6 class="mt-3">{{ grupo.titulo }}</h6>
-      @for (fila of grupo.filas; track $index) {
-        <div class="row">
-          @for (g of fila; track g.idGrado) {
-            <div class="col-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" [checked]="g.marcado" (change)="alternar(g)" id="g{{ g.idGrado }}" />
-                <label class="form-check-label" for="g{{ g.idGrado }}">{{ g.nombre }}</label>
-              </div>
+      <div class="card mb-2">
+        <div class="card-body">
+          @for (fila of grupo.filas; track $index) {
+            <div class="row">
+              @for (g of fila; track g.idGrado) {
+                <div class="col-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [checked]="g.marcado" (change)="alternar(g)" id="g{{ g.idGrado }}" />
+                    <label class="form-check-label" for="g{{ g.idGrado }}">{{ g.nombre }}</label>
+                  </div>
+                </div>
+              }
             </div>
           }
         </div>
-      }
+      </div>
     }
   }
   @if (error) {

@@ -17,6 +17,7 @@ export class CurriculoComp implements OnInit {
   idGrado: number | null = null;
   contexto: string = 'defecto';
   marcados = new Set<number>();
+  original = new Set<number>();
   existe: boolean = false;
   soloLectura: boolean = false;
   mensaje: string = '';
@@ -30,7 +31,7 @@ export class CurriculoComp implements OnInit {
 
   ngOnInit() {
     this.apiAnio.listarGrados().subscribe({ next: (g) => (this.grados = g) });
-    this.apiAnio.listar().subscribe({ next: (a) => (this.anios = a) });
+    this.apiAnio.listar(1, 100).subscribe({ next: (r) => (this.anios = r.datos) });
     this.apiCurso.listar(1, 100, '', 'Activo').subscribe({
       next: (r) => {
         const v = new Map<number, any>();
@@ -94,11 +95,13 @@ export class CurriculoComp implements OnInit {
     this.api.consultar(this.idGrado, this.contexto || 'defecto').subscribe({
       next: (r) => {
         (r.cursos ?? []).forEach((c: any) => this.marcados.add(c.idCurso));
+        this.original = new Set(this.marcados);
         this.existe = true;
       },
       error: (e) => {
         if (e.status === 404) {
           this.existe = false;
+          this.original = new Set();
           this.mensaje = 'Sin currículo: marca y guarda para crearlo.';
         } else {
           this.error = e.error?.error ?? 'No se pudo consultar';
@@ -117,6 +120,18 @@ export class CurriculoComp implements OnInit {
 
   alternar(id: number) {
     this.marcados.has(id) ? this.marcados.delete(id) : this.marcados.add(id);
+  }
+
+  esModificado(): boolean {
+    if (this.marcados.size !== this.original.size) {
+      return true;
+    }
+    for (const id of this.marcados) {
+      if (!this.original.has(id)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   estaMarcado(id: number): boolean {

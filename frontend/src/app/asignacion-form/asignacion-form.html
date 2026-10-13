@@ -1,0 +1,59 @@
+<h3>Nueva asignación</h3>
+<div style="max-width: 520px;">
+  <div class="mb-3">
+    <label class="form-label">Año lectivo (no cerrado)</label>
+    <select class="form-select" [(ngModel)]="anio" (change)="cargarPendientes()">
+      <option [ngValue]="null">Seleccione</option>
+      @for (a of anios; track a.anio) {
+        <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+      }
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Grado</label>
+    <select class="form-select" [(ngModel)]="idGrado" (change)="cambioGrado()">
+      <option [ngValue]="null">Seleccione</option>
+      @for (grupo of gruposGrados(); track grupo.etiqueta) {
+        <optgroup [label]="grupo.etiqueta">
+          @for (g of grupo.opciones; track g.idGrado) {
+            <option [ngValue]="g.idGrado">{{ g.nombre }}</option>
+          }
+        </optgroup>
+      }
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Sección</label>
+    <select class="form-select" [(ngModel)]="idSeccion" (change)="cargarPendientes()">
+      <option [ngValue]="null">Seleccione grado primero</option>
+      @for (s of secciones; track s.idSeccion) {
+        <option [ngValue]="s.idSeccion">{{ s.nombre }}</option>
+      }
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Curso pendiente (sin maestro)</label>
+    <select class="form-select" [(ngModel)]="idCurso">
+      <option [ngValue]="null">Seleccione año y sección primero</option>
+      @for (c of pendientes; track c.idCurso) {
+        <option [ngValue]="c.idCurso">{{ c.curso }}</option>
+      }
+    </select>
+    @if (anio != null && idSeccion != null && !pendientes.length && !error) {
+      <div class="form-text">Todos los cursos ya tienen maestro, use reasignar.</div>
+    }
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Maestro</label>
+    <select class="form-select" [(ngModel)]="idEmpleado">
+      <option [ngValue]="null">Seleccione</option>
+      @for (m of maestros; track m.idEmpleado) {
+        <option [ngValue]="m.idEmpleado">{{ m.maestro }}</option>
+      }
+    </select>
+  </div>
+  @if (error) {
+    <div class="alert alert-danger mt-2">{{ error }}</div>
+  }
+  <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>

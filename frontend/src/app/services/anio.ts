@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Pagina } from './carrera';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +11,15 @@ export class Anio {
 
   constructor(private http: HttpClient) {}
 
-  listar() {
-    return this.http.get<any[]>(this.api);
+  listar(page = 1, size = 10, anio: number | null = null, estado = '') {
+    let p = new HttpParams().set('page', page).set('size', size);
+    if (anio != null) {
+      p = p.set('anio', anio);
+    }
+    if (estado) {
+      p = p.set('estado', estado);
+    }
+    return this.http.get<Pagina<any>>(this.api, { params: p });
   }
 
   obtener(anio: number) {
@@ -43,6 +51,10 @@ export class Anio {
       'http://localhost:8080/backend/api/v1/estructura/' + anio,
       { grados },
     );
+  }
+
+  listarSecciones(anio: number) {
+    return this.http.get<{ secciones: any[] }>(`${this.api}/${anio}/secciones`);
   }
 
   listarGrados() {

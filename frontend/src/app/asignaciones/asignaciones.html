@@ -1,0 +1,80 @@
+<h3>Asignaciones</h3>
+<a class="btn btn-primary btn-sm mb-3" routerLink="/asignaciones/nuevo">Nueva asignación</a>
+<div class="row g-2 mb-3">
+  <div class="col">
+    <select class="form-select" [(ngModel)]="anio">
+      <option [ngValue]="null">Todos los años</option>
+      @for (a of anios; track a.anio) {
+        <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="grado">
+      <option [ngValue]="null">Todos los grados</option>
+      @for (grupo of gruposGrados(); track grupo.etiqueta) {
+        <optgroup [label]="grupo.etiqueta">
+          @for (g of grupo.opciones; track g.idGrado) {
+            <option [ngValue]="g.idGrado">{{ g.nombre }}</option>
+          }
+        </optgroup>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="seccion">
+      <option [ngValue]="null">Todas las secciones</option>
+      @for (s of secciones; track s.idSeccion) {
+        <option [ngValue]="s.idSeccion">{{ s.grado }} {{ s.nombre }}</option>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="curso">
+      <option [ngValue]="null">Todos los cursos</option>
+      @for (c of cursos; track c.idCurso) {
+        <option [ngValue]="c.idCurso">{{ c.nombre }}</option>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <input class="form-control" placeholder="Maestro" [(ngModel)]="maestro" />
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+  </div>
+</div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+<table class="table table-striped">
+  <thead><tr><th>Año</th><th>Grado</th><th>Sección</th><th>Curso</th><th>Maestro</th><th></th></tr></thead>
+  <tbody>
+    @for (a of datos; track a.idAsignacion) {
+      <tr>
+        <td>{{ a.anio }}</td>
+        <td>{{ a.grado }}</td>
+        <td>{{ a.seccion }}</td>
+        <td>{{ a.curso }}</td>
+        <td>{{ a.maestro }}</td>
+        <td>
+          <div class="d-flex gap-1">
+            <select class="form-select form-select-sm" [(ngModel)]="nuevoMaestro[a.idAsignacion]">
+              <option [ngValue]="null">Otro maestro…</option>
+              @for (m of maestros; track m.idEmpleado) {
+                <option [ngValue]="m.idEmpleado">{{ m.maestro }}</option>
+              }
+            </select>
+            <button class="btn btn-sm btn-outline-warning" (click)="reasignar(a)">Reasignar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="quitar(a)">Quitar</button>
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>
