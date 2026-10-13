@@ -38,6 +38,60 @@ public class AnioLectivoDAO {
         }
     }
 
+    public int contar(Integer anio, String estado) throws SQLException {
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM año_lectivo WHERE 1=1");
+        List<Object> p = new ArrayList<>();
+        if (anio != null) {
+            sb.append(" AND id_año_lectivo = ?");
+            p.add(anio);
+        }
+        if (estado != null && !estado.isBlank()) {
+            sb.append(" AND estado = ?");
+            p.add(estado);
+        }
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sb.toString())) {
+            for (int i = 0; i < p.size(); i++) {
+                ps.setObject(i + 1, p.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+    }
+
+    public List<AnioLectivo> listar(Integer anio, String estado, int limit, int offset) throws SQLException {
+        StringBuilder sb = new StringBuilder(
+                "SELECT id_año_lectivo, fecha_inicio, fecha_cierre, estado FROM año_lectivo WHERE 1=1");
+        List<Object> p = new ArrayList<>();
+        if (anio != null) {
+            sb.append(" AND id_año_lectivo = ?");
+            p.add(anio);
+        }
+        if (estado != null && !estado.isBlank()) {
+            sb.append(" AND estado = ?");
+            p.add(estado);
+        }
+        sb.append(" ORDER BY id_año_lectivo DESC LIMIT ? OFFSET ?");
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sb.toString())) {
+            int i = 1;
+            for (; i <= p.size(); i++) {
+                ps.setObject(i, p.get(i - 1));
+            }
+            ps.setInt(i++, limit);
+            ps.setInt(i, offset);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<AnioLectivo> lista = new ArrayList<>();
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
+                return lista;
+            }
+        }
+    }
+
     public AnioLectivo buscarPorAnio(int anio) throws SQLException {
         String sql = "SELECT id_año_lectivo, fecha_inicio, fecha_cierre, estado "
                 + "FROM año_lectivo WHERE id_año_lectivo = ?";

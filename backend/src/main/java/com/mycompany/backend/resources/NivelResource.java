@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.Map;
 
 /**
- * GET /api/v1/niveles  catálogo para combos
+ * GET /api/v1/niveles  catalogo para combos
  */
 @Path("niveles")
 public class NivelResource {

@@ -7,6 +7,7 @@ import com.mycompany.backend.dao.CurriculoDAO;
 import com.mycompany.backend.dao.EstructuraDAO;
 import com.mycompany.backend.dao.GradoDAO;
 import com.mycompany.backend.dao.InscripcionDAO;
+import com.mycompany.backend.dao.SeccionDAO;
 import com.mycompany.backend.dto.AnioLectivo;
 import jakarta.ws.rs.NotFoundException;
 import java.sql.Connection;
@@ -27,6 +28,7 @@ public class AnioService {
     private final GradoDAO gradoDAO = new GradoDAO();
     private final InscripcionDAO inscripcionDAO = new InscripcionDAO();
     private final AsignacionDAO asignacionDAO = new AsignacionDAO();
+    private final SeccionDAO seccionDAO = new SeccionDAO();
 
     public void crearAnio(int anio, LocalDate inicio, LocalDate cierre, List<Integer> grados) throws SQLException {
         if (inicio == null || cierre == null) {
@@ -98,6 +100,24 @@ public class AnioService {
 
     public List<AnioLectivo> listar() throws SQLException {
         return anioDAO.listarTodos();
+    }
+
+    public Map<String, Object> listar(Integer anio, String estado, int page, int size) throws SQLException {
+        if (page < 1) {
+            page = 1;
+        }
+        if (size < 1 || size > 100) {
+            size = 10;
+        }
+        int total = anioDAO.contar(anio, estado);
+        List<AnioLectivo> datos = anioDAO.listar(anio, estado, size, (page - 1) * size);
+        Map<String, Object> r = new HashMap<>();
+        r.put("datos", datos);
+        r.put("page", page);
+        r.put("size", size);
+        r.put("total", total);
+        r.put("totalPaginas", (total + size - 1) / size);
+        return r;
     }
 
     /**
@@ -185,7 +205,7 @@ public class AnioService {
     }
 
     /**
-     * modifica la estructura del año comparando lo que se tiene vs la lista nueva
+     * modifica la estructura del año comparando lo que se tiene vsla lista nueva
      */
     public void modificarEstructura(int anio, List<Integer> grados) throws SQLException {
         AnioLectivo a = anioDAO.buscarPorAnio(anio);
@@ -259,6 +279,15 @@ public class AnioService {
         detalle.put("estado", a.getEstado());
         detalle.put("estructura", estructuraDAO.listarPorAnio(anio));
         return detalle;
+    }
+
+    public Map<String, Object> obtenerSecciones(int anio) throws SQLException {
+        if (anioDAO.buscarPorAnio(anio) == null) {
+            throw new NotFoundException("Año lectivo no encontrado");
+        }
+        Map<String, Object> r = new HashMap<>();
+        r.put("secciones", seccionDAO.listarConAsignacionPorAnio(anio));
+        return r;
     }
 
     private void validarAnio(int anio) {

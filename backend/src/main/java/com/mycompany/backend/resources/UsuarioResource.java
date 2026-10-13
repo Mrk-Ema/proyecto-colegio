@@ -14,8 +14,8 @@ import jakarta.ws.rs.core.Response;
 import java.util.Map;
 
 /**
- * POST /api/v1/usuarios/login      {correo, password} -> {token, rol} 
- * POST /api/v1/usuarios/recuperar  {correo, fechaNacimiento, nueva} -> token o error
+ * POST /api/v1/usuarios/login      {correo, password} 
+ * POST /api/v1/usuarios/recuperar  {correo, fechaNacimiento, nueva} 
  * PUT  /api/v1/usuarios/password   {actual, nueva} (auth)
  * GET  /api/v1/usuarios/perfil     (auth, id del token)
  * PUT  /api/v1/usuarios/perfil     (auth, datos basicos)

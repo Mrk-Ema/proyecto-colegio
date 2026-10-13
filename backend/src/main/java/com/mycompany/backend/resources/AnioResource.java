@@ -3,12 +3,14 @@ package com.mycompany.backend.resources;
 import com.mycompany.backend.service.AnioService;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
@@ -28,9 +30,13 @@ public class AnioResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listar() {
+    public Response listar(
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size,
+            @QueryParam("anio") Integer anio,
+            @QueryParam("estado") String estado) {
         try {
-            return Response.ok(servicio.listar()).build();
+            return Response.ok(servicio.listar(anio, estado, page, size)).build();
         } catch (Exception e) {
             System.out.println("Error al listar años lectivos");
             e.printStackTrace();
@@ -47,6 +53,23 @@ public class AnioResource {
             return Response.ok(servicio.obtener(anio)).build();
         } catch (Exception e) {
             System.out.println("Error al consultar año lectivo");
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error", "Error interno")).build();
+        }
+    }
+
+    @GET
+    @Path("{anio}/secciones")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response secciones(@PathParam("anio") int anio) {
+        try {
+            return Response.ok(servicio.obtenerSecciones(anio)).build();
+        } catch (jakarta.ws.rs.NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("error", e.getMessage())).build();
+        } catch (Exception e) {
+            System.out.println("Error al listar secciones del año");
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", "Error interno")).build();

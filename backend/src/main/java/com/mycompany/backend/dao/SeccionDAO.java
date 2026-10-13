@@ -176,8 +176,30 @@ public class SeccionDAO {
         }
     }
 
-    private Map<String, Object> mapear(ResultSet rs) throws SQLException {
-        Map<String, Object> m = new HashMap<>();
+    public List<Map<String, Object>> listarConAsignacionPorAnio(int anio) throws SQLException {
+        String sql = "SELECT DISTINCT s.id_seccion, s.nombre, g.id_grado, g.nombre AS grado "
+                + "FROM asignacion_maestro am JOIN seccion s ON s.id_seccion = am.id_seccion "
+                + "JOIN grado g ON g.id_grado = s.id_grado "
+                + "WHERE am.id_año_lectivo = ? ORDER BY g.nombre, s.nombre";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, anio);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idSeccion", rs.getInt("id_seccion"));
+                    m.put("nombre", rs.getString("nombre"));
+                    m.put("idGrado", rs.getInt("id_grado"));
+                    m.put("grado", rs.getString("grado"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
+    private Map<String, Object> mapear(ResultSet rs) throws SQLException {        Map<String, Object> m = new HashMap<>();
         m.put("idSeccion", rs.getInt("id_seccion"));
         m.put("nombre", rs.getString("nombre"));
         m.put("estado", rs.getString("estado"));
