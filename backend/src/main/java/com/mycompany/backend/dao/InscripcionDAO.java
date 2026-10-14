@@ -48,4 +48,29 @@ public class InscripcionDAO {
             }
         }
     }
+
+    public java.util.List<java.util.Map<String, Object>> historialPorEstudiante(int idEstudiante) throws SQLException {
+        String sql = "SELECT i.id_año_lectivo AS anio, g.nombre AS grado, s.nombre AS seccion, "
+                + "i.fecha_inscripcion AS fechaInscripcion "
+                + "FROM inscripcion i JOIN seccion s ON s.id_seccion = i.id_seccion "
+                + "JOIN grado g ON g.id_grado = s.id_grado "
+                + "WHERE i.id_estudiante = ? ORDER BY i.id_año_lectivo DESC";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstudiante);
+            try (ResultSet rs = ps.executeQuery()) {
+                java.util.List<java.util.Map<String, Object>> l = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    java.util.Map<String, Object> m = new java.util.HashMap<>();
+                    m.put("anio", rs.getInt("anio"));
+                    m.put("grado", rs.getString("grado"));
+                    m.put("seccion", rs.getString("seccion"));
+                    java.sql.Date f = rs.getDate("fechaInscripcion");
+                    m.put("fechaInscripcion", f != null ? f.toLocalDate().toString() : null);
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
 }

@@ -6,8 +6,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UsuarioDAO {
+
+    public int crear(String correo, String hash, String rol) throws SQLException {
+        String sql = "INSERT INTO usuario (correo, `contraseña_hash`, rol, estado) "
+                + "VALUES (?, ?, ?, 'Activo')";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, correo);
+            ps.setString(2, hash);
+            ps.setString(3, rol);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+    }
 
     public Usuario buscarPorCorreo(String correo) throws SQLException {
         String sql = "SELECT id_usuario, correo, `contraseña_hash`, rol, estado "
