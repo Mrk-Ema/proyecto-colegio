@@ -1,3 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+  background-color: #f4f6f9;
+}
+
+.btn-primary {
+  --bs-btn-bg: #1a3a5c;
+  --bs-btn-border-color: #1a3a5c;
+  --bs-btn-hover-bg: #122a44;
+  --bs-btn-hover-border-color: #122a44;
+  --bs-btn-active-bg: #122a44;
+  --bs-btn-active-border-color: #122a44;
+}

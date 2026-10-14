@@ -1,5 +1,5 @@
 <h3>{{ esEditar ? 'Modificar sección' : 'Nueva sección' }}</h3>
-<div style="max-width: 520px;">
+<div class="card shadow-sm mb-3"><div class="card-body" style="max-width: 560px;">
   <div class="mb-3">
     <label class="form-label">Grado</label>
     <select class="form-select" [(ngModel)]="idGrado" [disabled]="esEditar">
@@ -24,4 +24,5 @@
     <div class="alert alert-danger mt-2">{{ error }}</div>
   }
   <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>
 </div>

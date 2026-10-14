@@ -1,6 +1,6 @@
 <h3>Secciones</h3>
-<a class="btn btn-primary btn-sm mb-3" routerLink="/secciones/nuevo">Nueva sección</a>
-<div class="row g-2 mb-3">
+<a class="btn btn-primary btn-sm mb-3" routerLink="/secciones/nuevo"><i class="bi bi-plus-lg me-1"></i>Nueva sección</a>
+<div class="card shadow-sm mb-3"><div class="card-body"><div class="row g-2">
   <div class="col">
     <select class="form-select" [(ngModel)]="nivel">
       <option [ngValue]="null">Todos los niveles</option>
@@ -40,13 +40,17 @@
     </select>
   </div>
   <div class="col-auto">
-    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+    <button class="btn btn-secondary" (click)="filtrar()"><i class="bi bi-search me-1"></i>Filtrar</button>
   </div>
 </div>
+</div></div>
 @if (error) {
   <div class="alert alert-danger">{{ error }}</div>
 }
-<table class="table table-striped">
+@if (!datos.length && !error) {
+  <div class="alert alert-info">Sin secciones con esos filtros.</div>
+}
+<table class="table table-striped table-hover">
   <thead><tr><th>Sección</th><th>Grado</th><th>Nivel</th><th>Carrera</th><th>Estado</th><th></th></tr></thead>
   <tbody>
     @for (s of datos; track s.idSeccion) {
@@ -55,14 +59,14 @@
         <td>{{ s.grado }}</td>
         <td>{{ s.nivel }}</td>
         <td>{{ s.carrera }}</td>
-        <td>{{ s.estado }}</td>
+        <td><span class="badge" [class.text-bg-success]="s.estado === 'Activo'" [class.text-bg-secondary]="s.estado !== 'Activo'">{{ s.estado }}</span></td>
         <td>
-          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/secciones', s.idSeccion, 'editar']">Editar</a>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/secciones', s.idSeccion, 'editar']"><i class="bi bi-pencil me-1"></i>Editar</a>
           @if (s.estado === 'Activo') {
-            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(s)">Desactivar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(s)"><i class="bi bi-slash-circle me-1"></i>Desactivar</button>
           }
           @if (s.estado === 'Inactivo') {
-            <button class="btn btn-sm btn-outline-success" (click)="activar(s)">Activar</button>
+            <button class="btn btn-sm btn-outline-success" (click)="activar(s)"><i class="bi bi-check-circle me-1"></i>Activar</button>
           }
         </td>
       </tr>

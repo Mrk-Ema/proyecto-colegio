@@ -1,6 +1,6 @@
 <h3>Asignaciones</h3>
-<a class="btn btn-primary btn-sm mb-3" routerLink="/asignaciones/nuevo">Nueva asignación</a>
-<div class="row g-2 mb-3">
+<a class="btn btn-primary btn-sm mb-3" routerLink="/asignaciones/nuevo"><i class="bi bi-plus-lg me-1"></i>Nueva asignación</a>
+<div class="card shadow-sm mb-3"><div class="card-body"><div class="row g-2">
   <div class="col">
     <select class="form-select" [(ngModel)]="anio">
       <option [ngValue]="null">Todos los años</option>
@@ -41,13 +41,17 @@
     <input class="form-control" placeholder="Maestro" [(ngModel)]="maestro" />
   </div>
   <div class="col-auto">
-    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+    <button class="btn btn-secondary" (click)="filtrar()"><i class="bi bi-search me-1"></i>Filtrar</button>
   </div>
 </div>
+</div></div>
 @if (error) {
   <div class="alert alert-danger">{{ error }}</div>
 }
-<table class="table table-striped">
+@if (!datos.length && !error) {
+  <div class="alert alert-info">Sin asignaciones con esos filtros.</div>
+}
+<table class="table table-striped table-hover">
   <thead><tr><th>Año</th><th>Grado</th><th>Sección</th><th>Curso</th><th>Maestro</th><th></th></tr></thead>
   <tbody>
     @for (a of datos; track a.idAsignacion) {
@@ -65,8 +69,8 @@
                 <option [ngValue]="m.idEmpleado">{{ m.maestro }}</option>
               }
             </select>
-            <button class="btn btn-sm btn-outline-warning" (click)="reasignar(a)">Reasignar</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="quitar(a)">Quitar</button>
+            <button class="btn btn-sm btn-outline-warning" (click)="reasignar(a)"><i class="bi bi-arrow-repeat me-1"></i>Reasignar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="quitar(a)"><i class="bi bi-x-lg me-1"></i>Quitar</button>
           </div>
         </td>
       </tr>

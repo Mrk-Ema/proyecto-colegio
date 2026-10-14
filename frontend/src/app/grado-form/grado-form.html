@@ -1,5 +1,5 @@
 <h3>{{ esEditar ? 'Modificar grado' : 'Nuevo grado' }}</h3>
-<div style="max-width: 520px;">
+<div class="card shadow-sm mb-3"><div class="card-body" style="max-width: 560px;">
   <div class="mb-3">
     <label class="form-label">Nombre</label>
     <input class="form-control" [(ngModel)]="nombre" />
@@ -52,4 +52,5 @@
     <div class="alert alert-danger mt-2">{{ error }}</div>
   }
   <button class="btn btn-primary mt-2" (click)="guardar()">Guardar</button>
+</div>
 </div>

@@ -1,0 +1,31 @@
+@if (datos) {
+  <h3>{{ datos.nombres }} {{ datos.apellidos }} <small class="text-muted">{{ datos.carnet }}</small></h3>
+  <p>Correo: {{ datos.correo }} | Estado: {{ datos.estado }} | Nacimiento: {{ datos.fechaNacimiento }}</p>
+  <p>Teléfono: {{ datos.telefono ?? '—' }} | Dirección: {{ datos.direccion ?? '—' }}</p>
+  <h5>Datos médicos</h5>
+  <p>Sangre: {{ datos.tipoSangre ?? '—' }} | Alergias: {{ datos.alergias ?? '—' }} | Padecimientos: {{ datos.padecimientos ?? '—' }}</p>
+  <h5>Encargados</h5>
+  <ul class="list-group mb-3">
+    @for (e of datos.encargados; track e.idEncargado) {
+      <li class="list-group-item">{{ e.nombres }} {{ e.apellidos }} ({{ e.parentesco ?? '—' }}) — {{ e.telefono ?? '—' }} — DPI {{ e.dpi }}</li>
+    }
+  </ul>
+  <h5>Historial de inscripciones</h5>
+  @if (!datos.inscripciones.length) {
+    <div class="alert alert-info">Sin inscripciones.</div>
+  } @else {
+    <table class="table table-striped">
+      <thead><tr><th>Año</th><th>Grado</th><th>Sección</th><th>Fecha</th></tr></thead>
+      <tbody>
+        @for (i of datos.inscripciones; track $index) {
+          <tr><td>{{ i.anio }}</td><td>{{ i.grado }}</td><td>{{ i.seccion }}</td><td>{{ i.fechaInscripcion }}</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+  <a class="btn btn-outline-secondary btn-sm mt-3 me-2" routerLink="/estudiantes">Volver</a>
+  <a class="btn btn-outline-secondary btn-sm mt-3" [routerLink]="['/estudiantes', datos.idEstudiante, 'editar']">Editar</a>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}

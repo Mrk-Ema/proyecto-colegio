@@ -22,6 +22,9 @@ import { SeccionForm } from './seccion-form/seccion-form';
 import { CurriculoComp } from './curriculo/curriculo';
 import { Asignaciones } from './asignaciones/asignaciones';
 import { AsignacionForm } from './asignacion-form/asignacion-form';
+import { Estudiantes } from './estudiantes/estudiantes';
+import { EstudianteForm } from './estudiante-form/estudiante-form';
+import { EstudianteDetalle } from './estudiante-detalle/estudiante-detalle';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -55,6 +58,10 @@ export const routes: Routes = [
       { path: 'curriculo', component: CurriculoComp, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'asignaciones', component: Asignaciones, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'asignaciones/nuevo', component: AsignacionForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'estudiantes', component: Estudiantes, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'estudiantes/nuevo', component: EstudianteForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'estudiantes/:id/editar', component: EstudianteForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'estudiantes/:id', component: EstudianteDetalle, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
     ],
   },
   { path: '**', redirectTo: '' },

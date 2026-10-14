@@ -1,6 +1,6 @@
 <h3>Cursos</h3>
-<a class="btn btn-primary btn-sm mb-3" routerLink="/cursos/nuevo">Nuevo curso</a>
-<div class="row g-2 mb-3">
+<a class="btn btn-primary btn-sm mb-3" routerLink="/cursos/nuevo"><i class="bi bi-plus-lg me-1"></i>Nuevo curso</a>
+<div class="card shadow-sm mb-3"><div class="card-body"><div class="row g-2">
   <div class="col">
     <input class="form-control" placeholder="Nombre" [(ngModel)]="nombre" />
   </div>
@@ -24,27 +24,31 @@
     </select>
   </div>
   <div class="col-auto">
-    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+    <button class="btn btn-secondary" (click)="filtrar()"><i class="bi bi-search me-1"></i>Filtrar</button>
   </div>
 </div>
+</div></div>
 @if (error) {
   <div class="alert alert-danger">{{ error }}</div>
 }
-<table class="table table-striped">
+@if (!datos.length && !error) {
+  <div class="alert alert-info">Sin cursos con esos filtros.</div>
+}
+<table class="table table-striped table-hover">
   <thead><tr><th>Nombre</th><th>Grado</th><th>Estado</th><th></th></tr></thead>
   <tbody>
     @for (c of datos; track c.idCurso + '-' + c.idGrado) {
       <tr>
         <td>{{ c.nombre }}</td>
         <td>{{ c.grado }}</td>
-        <td>{{ c.estado }}</td>
+        <td><span class="badge" [class.text-bg-success]="c.estado === 'Activo'" [class.text-bg-secondary]="c.estado !== 'Activo'">{{ c.estado }}</span></td>
         <td>
-          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/cursos', c.idCurso, 'editar']">Editar</a>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/cursos', c.idCurso, 'editar']"><i class="bi bi-pencil me-1"></i>Editar</a>
           @if (c.estado === 'Activo') {
-            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(c)">Desactivar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(c)"><i class="bi bi-slash-circle me-1"></i>Desactivar</button>
           }
           @if (c.estado === 'Inactivo') {
-            <button class="btn btn-sm btn-outline-success" (click)="activar(c)">Activar</button>
+            <button class="btn btn-sm btn-outline-success" (click)="activar(c)"><i class="bi bi-check-circle me-1"></i>Activar</button>
           }
         </td>
       </tr>

@@ -33,7 +33,7 @@
       <div class="row">
         @for (c of fila; track c.idCurso) {
           <div class="col-4">
-            <div class="form-check">
+            <div class="form-check form-switch">
               <input class="form-check-input" type="checkbox" [checked]="estaMarcado(c.idCurso)" (change)="alternar(c.idCurso)" [disabled]="soloLectura" id="c{{ c.idCurso }}" />
               <label class="form-check-label" for="c{{ c.idCurso }}">{{ c.nombre }}</label>
             </div>

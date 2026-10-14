@@ -1,6 +1,6 @@
 <h3>Años lectivos</h3>
-<a class="btn btn-primary btn-sm mb-3" routerLink="/anios/nuevo">Nuevo año</a>
-<div class="row g-2 mb-3">
+<a class="btn btn-primary btn-sm mb-3" routerLink="/anios/nuevo"><i class="bi bi-plus-lg me-1"></i>Nuevo año</a>
+<div class="card shadow-sm mb-3"><div class="card-body"><div class="row g-2">
   <div class="col">
     <input class="form-control" placeholder="Año" [(ngModel)]="filtroAnio" type="number" />
   </div>
@@ -13,30 +13,34 @@
     </select>
   </div>
   <div class="col-auto">
-    <button class="btn btn-secondary" (click)="filtrar()">Filtrar</button>
+    <button class="btn btn-secondary" (click)="filtrar()"><i class="bi bi-search me-1"></i>Filtrar</button>
   </div>
 </div>
+</div></div>
 @if (error) {
   <div class="alert alert-danger">{{ error }}</div>
 }
-<table class="table table-striped">
+@if (!anios.length && !error) {
+  <div class="alert alert-info">Sin años con esos filtros.</div>
+}
+<table class="table table-striped table-hover">
   <thead><tr><th>Año</th><th>Inicio</th><th>Cierre</th><th>Estado</th><th></th></tr></thead>
   <tbody>
     @for (a of anios; track a.anio) {
       <tr>
         <td>{{ a.anio }}</td><td>{{ a.fechaInicio }}</td>
-        <td>{{ a.fechaCierre }}</td><td>{{ a.estado }}</td>
+        <td>{{ a.fechaCierre }}</td><td><span class="badge" [class.text-bg-warning]="a.estado === 'Planificado'" [class.text-bg-success]="a.estado === 'Activo'" [class.text-bg-danger]="a.estado === 'Cerrado'">{{ a.estado }}</span></td>
         <td>
-          <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/anios', a.anio]">Ver</a>
+          <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/anios', a.anio]"><i class="bi bi-eye me-1"></i>Ver</a>
           @if (a.estado !== 'Cerrado') {
-            <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/anios', a.anio, 'estructura']">Editar</a>
+            <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/anios', a.anio, 'estructura']"><i class="bi bi-pencil me-1"></i>Editar</a>
           }
           @if (a.estado === 'Planificado') {
-            <button class="btn btn-sm btn-outline-success me-1" (click)="activar(a)">Activar</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="eliminar(a)">Eliminar</button>
+            <button class="btn btn-sm btn-outline-success me-1" (click)="activar(a)"><i class="bi bi-check-circle me-1"></i>Activar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="eliminar(a)"><i class="bi bi-trash me-1"></i>Eliminar</button>
           }
           @if (a.estado === 'Activo') {
-            <button class="btn btn-sm btn-outline-warning" (click)="cerrar(a)">Cerrar</button>
+            <button class="btn btn-sm btn-outline-warning" (click)="cerrar(a)"><i class="bi bi-lock me-1"></i>Cerrar</button>
           }
         </td>
       </tr>
