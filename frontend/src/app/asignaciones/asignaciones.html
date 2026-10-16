@@ -62,14 +62,14 @@
         <td>{{ a.curso }}</td>
         <td>{{ a.maestro }}</td>
         <td>
-          <div class="d-flex gap-1">
-            <select class="form-select form-select-sm" [(ngModel)]="nuevoMaestro[a.idAsignacion]">
+          <div class="d-flex gap-1"  >
+            <select class="form-select form-select-sm" style="max-width: 200px;" [(ngModel)]="nuevoMaestro[a.idAsignacion]">
               <option [ngValue]="null">Otro maestro…</option>
               @for (m of maestros; track m.idEmpleado) {
                 <option [ngValue]="m.idEmpleado">{{ m.maestro }}</option>
               }
             </select>
-            <button class="btn btn-sm btn-outline-warning" (click)="reasignar(a)"><i class="bi bi-arrow-repeat me-1"></i>Reasignar</button>
+            <button class="btn btn-sm btn-outline-success" (click)="reasignar(a)"><i class="bi bi-arrow-repeat me-1"></i>Reasignar</button>
             <button class="btn btn-sm btn-outline-danger" (click)="quitar(a)"><i class="bi bi-x-lg me-1"></i>Quitar</button>
           </div>
         </td>

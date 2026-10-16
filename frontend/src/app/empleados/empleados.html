@@ -1,0 +1,59 @@
+<h3>Empleados</h3>
+<a class="btn btn-primary btn-sm mb-3" routerLink="/empleados/nuevo"><i class="bi bi-plus-lg me-1"></i>Nuevo empleado</a>
+<div class="card shadow-sm mb-3"><div class="card-body"><div class="row g-2">
+  <div class="col">
+    <input class="form-control" placeholder="Nombre" [(ngModel)]="filtroNombre" />
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="filtroPuesto">
+      <option value="">Todos los puestos</option>
+      @for (p of puestos; track p) {
+        <option [value]="p">{{ p }}</option>
+      }
+    </select>
+  </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="filtroEstado">
+      <option value="">Todos</option>
+      <option value="Activo">Activo</option>
+      <option value="Inactivo">Inactivo</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-secondary" (click)="filtrar()"><i class="bi bi-search me-1"></i>Filtrar</button>
+  </div>
+</div>
+</div></div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (!filas.length && !error) {
+  <div class="alert alert-info">Sin empleados con esos filtros.</div>
+}
+<table class="table table-striped table-hover">
+  <thead><tr><th>Nombre</th><th>Puesto</th><th>Correo</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    @for (f of filas; track f.idEmpleado) {
+      <tr>
+        <td>{{ f.nombres }} {{ f.apellidos }}</td><td>{{ f.puesto }}</td>
+        <td>{{ f.correo ?? '—' }}</td>
+        <td><span class="badge" [class.text-bg-success]="f.estado === 'Activo'" [class.text-bg-secondary]="f.estado !== 'Activo'">{{ f.estado }}</span></td>
+        <td class="text-nowrap">
+          <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/empleados', f.idEmpleado]"><i class="bi bi-eye me-1"></i>Ver</a>
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/empleados', f.idEmpleado, 'editar']"><i class="bi bi-pencil me-1"></i>Editar</a>
+          @if (f.estado === 'Activo') {
+            <button class="btn btn-sm btn-outline-danger" (click)="desactivar(f)"><i class="bi bi-slash-circle me-1"></i>Desactivar</button>
+          }
+          @if (f.estado === 'Inactivo') {
+            <button class="btn btn-sm btn-outline-success" (click)="activar(f)"><i class="bi bi-check-circle me-1"></i>Activar</button>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>

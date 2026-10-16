@@ -1,0 +1,42 @@
+@if (esEditar) {
+  <h3>Editar empleado</h3>
+} @else {
+  <h3>Nuevo empleado</h3>
+  <div class="alert alert-info">La contraseña inicial es 123. Se comunica en persona.</div>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+<div class="card shadow-sm mb-3"><div class="card-body" style="max-width: 560px;">
+<div class="row g-2 mb-2">
+  <div class="col"><label class="form-label">Nombres *</label><input class="form-control" [(ngModel)]="nombres" /></div>
+  <div class="col"><label class="form-label">Apellidos *</label><input class="form-control" [(ngModel)]="apellidos" /></div>
+</div>
+<div class="row g-2 mb-2">
+  <div class="col"><label class="form-label">DPI *</label><input class="form-control" [(ngModel)]="dpi" maxlength="13" /></div>
+  <div class="col"><label class="form-label">Fecha nacimiento *</label><input class="form-control" [(ngModel)]="fechaNacimiento" type="date" /></div>
+  <div class="col"><label class="form-label">Teléfono</label><input class="form-control" [(ngModel)]="telefono" maxlength="8" /></div>
+</div>
+<div class="mb-2"><label class="form-label">Dirección</label><input class="form-control" [(ngModel)]="direccion" /></div>
+<div class="row g-2 mb-2">
+  <div class="col"><label class="form-label">Puesto *</label>
+    <select class="form-select" [(ngModel)]="puesto">
+      <option value="">Seleccione</option>
+      @for (p of puestos; track p) {
+        <option [value]="p">{{ p }}</option>
+      }
+    </select>
+  </div>
+  <div class="col"><label class="form-label">Fecha contratación *</label><input class="form-control" [(ngModel)]="fechaContratacion" type="date" /></div>
+  <div class="col"><label class="form-label">Salario *</label><input class="form-control" [(ngModel)]="salario" type="number" min="0" step="0.01" /></div>
+</div>
+@if (pideCorreo()) {
+  <div class="mb-2"><label class="form-label">Correo *</label><input class="form-control" [(ngModel)]="correo" type="email" /></div>
+} @else if (puesto) {
+  <div class="alert alert-info">Este puesto no requiere acceso al sistema (sin correo ni contraseña).</div>
+}
+<div class="mt-3">
+  <button class="btn btn-primary me-2" (click)="guardar()">Guardar</button>
+  <a class="btn btn-outline-secondary" routerLink="/empleados">Volver</a>
+</div>
+</div></div>

@@ -1,0 +1,12 @@
+@if (datos) {
+  <h3>{{ datos.nombres }} {{ datos.apellidos }} <small class="text-muted">{{ datos.puesto }}</small></h3>
+  <p>DPI: {{ datos.dpi }} | Nacimiento: {{ datos.fechaNacimiento }} | Estado: <span class="badge" [class.text-bg-success]="datos.estado === 'Activo'" [class.text-bg-secondary]="datos.estado !== 'Activo'">{{ datos.estado }}</span></p>
+  <p>Teléfono: {{ datos.telefono ?? '—' }} | Dirección: {{ datos.direccion ?? '—' }}</p>
+  <p>Contratación: {{ datos.fechaContratacion }} | Salario: {{ datos.salario }}</p>
+  <p>Correo: {{ datos.correo ?? 'Sin acceso al sistema' }}</p>
+  <a class="btn btn-outline-secondary btn-sm mt-3 me-2" routerLink="/empleados">Volver</a>
+  <a class="btn btn-outline-secondary btn-sm mt-3" [routerLink]="['/empleados', datos.idEmpleado, 'editar']"><i class="bi bi-pencil me-1"></i>Editar</a>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
