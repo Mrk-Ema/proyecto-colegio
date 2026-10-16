@@ -87,4 +87,24 @@ public class UsuarioDAO {
             ps.executeUpdate();
         }
     }
+
+    public void actualizarEstado(Integer idUsuario, String estado) throws SQLException {
+        String sql = "UPDATE usuario SET estado = ? WHERE id_usuario = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, estado);
+            ps.setInt(2, idUsuario);
+            ps.executeUpdate();
+        }
+    }
+
+    public void actualizarRol(Integer idUsuario, String rol) throws SQLException {
+        String sql = "UPDATE usuario SET rol = ? WHERE id_usuario = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, rol);
+            ps.setInt(2, idUsuario);
+            ps.executeUpdate();
+        }
+    }
 }
