@@ -1,0 +1,125 @@
+<h3>Inscripciones</h3>
+<a class="btn btn-primary btn-sm mb-3" routerLink="/inscripciones/nuevo">
+  <i class="bi bi-plus-lg me-1"></i>Nueva inscripción
+</a>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroAnio" (change)="cargarGrados(); filtrar()">
+          <option [ngValue]="null">Todos los años</option>
+          @for (a of anios; track a.anio) {
+            <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroNivel" (change)="filtrar()">
+          <option [ngValue]="null">Todos los niveles</option>
+          @for (n of niveles; track n.idNivel) {
+            <option [ngValue]="n.idNivel">{{ n.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroGrado" (change)="cargarSecciones(); filtrar()">
+          <option [ngValue]="null">Todos los grados</option>
+          @for (g of grados; track g.idGrado) {
+            <option [ngValue]="g.idGrado">{{ g.grado }}</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroSeccion" (change)="filtrar()">
+          <option [ngValue]="null">Todas las secciones</option>
+          @for (s of secciones; track s.idSeccion) {
+            <option [ngValue]="s.idSeccion">{{ s.seccion }}</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <input
+          class="form-control"
+          placeholder="Nombre o carné del estudiante"
+          [(ngModel)]="filtroEstudiante"
+        />
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary" (click)="filtrar()">
+          <i class="bi bi-search me-1"></i>Filtrar
+        </button>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-outline-secondary" (click)="limpiar()">Limpiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (!datos.length && !error) {
+  <div class="alert alert-info">No hay inscripciones con esos filtros.</div>
+}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Año</th>
+      <th>Carné</th>
+      <th>Estudiante</th>
+      <th>Nivel</th>
+      <th>Grado</th>
+      <th>Carrera</th>
+      <th>Sección</th>
+      <th>Estado</th>
+      <th>Fecha</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (f of datos; track f.idInscripcion) {
+      <tr>
+        <td>{{ f.anio }}</td>
+        <td>{{ f.carnet }}</td>
+        <td>{{ f.nombres }} {{ f.apellidos }}</td>
+        <td>{{ f.nivel }}</td>
+        <td>{{ f.grado }}</td>
+        <td>{{ f.carrera ?? '—' }}</td>
+        <td>{{ f.seccion }}</td>
+        <td>
+          <span
+            class="badge"
+            [class.text-bg-success]="f.estadoEstudiante === 'Activo'"
+            [class.text-bg-secondary]="f.estadoEstudiante === 'Inactivo'"
+            [class.text-bg-primary]="f.estadoEstudiante === 'Graduado'"
+            >{{ f.estadoEstudiante }}</span
+          >
+        </td>
+        <td>{{ f.fechaInscripcion }}</td>
+        <td class="text-nowrap">
+          <a
+            class="btn btn-sm btn-outline-secondary me-1"
+            [routerLink]="['/inscripciones', f.idInscripcion, 'editar']"
+          >
+            <i class="bi bi-pencil me-1"></i>Modificar
+          </a>
+          <a
+            class="btn btn-sm btn-outline-primary"
+            [routerLink]="['/estudiantes', f.idEstudiante]"
+          >
+            <i class="bi bi-eye me-1"></i>Ver estudiante
+          </a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>

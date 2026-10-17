@@ -1,0 +1,122 @@
+@if (esEditar) {
+  <h3>Modificar inscripción</h3>
+  <div class="alert alert-info">Solo se puede cambiar la sección.</div>
+} @else {
+  <h3>Nueva inscripción</h3>
+  <div class="alert alert-info">
+    La inscripción no exige pago previo. El estudiante, el año y el grado quedan fijos.
+  </div>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-warning">{{ aviso }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body" style="max-width: 640px">
+    @if (!esEditar) {
+      <div class="mb-3">
+        <label class="form-label">Estudiante *</label>
+        @if (estudiante) {
+          <div class="input-group">
+            <input class="form-control" [value]="estudiante.carnet + ' — ' + estudiante.nombres + ' ' + estudiante.apellidos" disabled />
+            <button class="btn btn-outline-secondary" type="button" (click)="quitarEstudiante()">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        } @else {
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="Nombre o carné"
+              [(ngModel)]="busqueda"
+              (keyup.enter)="buscar()"
+            />
+            <button class="btn btn-primary" type="button" (click)="buscar()" [disabled]="!busqueda.trim() || buscando">
+              <i class="bi bi-search me-1"></i>Buscar
+            </button>
+          </div>
+          @if (resultados.length) {
+            <div class="list-group mt-2">
+              @for (r of resultados; track r.idEstudiante) {
+                <button class="list-group-item list-group-item-action" type="button" (click)="elegirEstudiante(r)">
+                  {{ r.carnet }} — {{ r.nombres }} {{ r.apellidos }}
+                </button>
+              }
+            </div>
+          }
+        }
+      </div>
+    } @else {
+      <div class="mb-3">
+        <label class="form-label">Estudiante</label>
+        <input
+          class="form-control"
+          [value]="estudiante ? estudiante.carnet + ' — ' + estudiante.nombres + ' ' + estudiante.apellidos : ''"
+          disabled
+        />
+      </div>
+    }
+
+    <div class="row g-2 mb-2">
+      <div class="col">
+        <label class="form-label">Año lectivo *</label>
+        @if (esEditar) {
+          <input class="form-control" [value]="anio" disabled />
+        } @else {
+          <select
+            class="form-select"
+            [ngModel]="anio"
+            (ngModelChange)="anio = $event; idGrado = null; idSeccion = null; cargarGrados()"
+          >
+            <option [ngValue]="null">Seleccione</option>
+            @for (a of anios; track a.anio) {
+              <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+            }
+          </select>
+        }
+      </div>
+      <div class="col">
+        <label class="form-label">Grado *</label>
+        @if (esEditar) {
+          <input class="form-control" [value]="nombreGrado()" disabled />
+        } @else {
+          <select
+            class="form-select"
+            [ngModel]="idGrado"
+            (ngModelChange)="idGrado = $event; idSeccion = null; cargarSecciones()"
+          >
+            <option [ngValue]="null">Seleccione</option>
+            @for (g of grados; track g.idGrado) {
+              <option [ngValue]="g.idGrado">{{ g.grado }}</option>
+            }
+          </select>
+        }
+      </div>
+      <div class="col">
+        <label class="form-label">Sección *</label>
+        <select class="form-select" [(ngModel)]="idSeccion">
+          <option [ngValue]="null">Seleccione</option>
+          @for (s of secciones; track s.idSeccion) {
+            <option [ngValue]="s.idSeccion">{{ s.seccion }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (esEditar) {
+      <div class="alert alert-secondary mb-3">
+        <i class="bi bi-info-circle me-1"></i>La sección debe pertenecer al mismo grado de la inscripción.
+      </div>
+    }
+
+    <div class="mt-3">
+      <button class="btn btn-primary me-2" (click)="guardar()">
+        {{ esEditar ? 'Guardar cambios' : 'Registrar inscripción' }}
+      </button>
+      <a class="btn btn-outline-secondary" routerLink="/inscripciones">Volver</a>
+    </div>
+  </div>
+</div>
