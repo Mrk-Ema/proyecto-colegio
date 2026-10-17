@@ -9,6 +9,8 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -29,7 +31,11 @@ public class CurriculoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response consultar(
             @QueryParam("grado") int grado,
-            @QueryParam("contexto") @DefaultValue("defecto") String contexto) {
+            @QueryParam("contexto") @DefaultValue("defecto") String contexto,
+            @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.consultar(grado, contexto)).build();
         } catch (jakarta.ws.rs.NotFoundException e) {
@@ -47,7 +53,10 @@ public class CurriculoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Response crear(Map<String, Object> datos) {
+    public Response crear(Map<String, Object> datos, @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.crear(numero(datos.get("idGrado")), contexto(datos), lista(datos.get("cursos")));
             return Response.ok(Map.of("mensaje", "Currículo creado")).build();
@@ -69,7 +78,10 @@ public class CurriculoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Response modificar(Map<String, Object> datos) {
+    public Response modificar(Map<String, Object> datos, @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.modificar(numero(datos.get("idGrado")), contexto(datos), lista(datos.get("cursos")));
             return Response.ok(Map.of("mensaje", "Currículo modificado")).build();
@@ -107,5 +119,20 @@ public class CurriculoResource {
             }
         }
         return l;
+    }
+
+    private boolean esSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Super Admin".equals(rol);
+    }
+
+    private boolean esAdminOSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Admin".equals(rol) || "Super Admin".equals(rol);
+    }
+
+    private Response prohibido() {
+        return Response.status(Response.Status.FORBIDDEN)
+                .entity(Map.of("error", "No autorizado para esta accion")).build();
     }
 }

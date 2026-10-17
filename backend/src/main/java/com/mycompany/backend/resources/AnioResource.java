@@ -11,6 +11,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
@@ -34,7 +36,11 @@ public class AnioResource {
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size,
             @QueryParam("anio") Integer anio,
-            @QueryParam("estado") String estado) {
+            @QueryParam("estado") String estado,
+            @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.listar(anio, estado, page, size)).build();
         } catch (Exception e) {
@@ -48,7 +54,11 @@ public class AnioResource {
     @GET
     @Path("{anio}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtener(@PathParam("anio") int anio) {
+    public Response obtener(@PathParam("anio") int anio,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.obtener(anio)).build();
         } catch (Exception e) {
@@ -62,7 +72,11 @@ public class AnioResource {
     @GET
     @Path("{anio}/secciones")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response secciones(@PathParam("anio") int anio) {
+    public Response secciones(@PathParam("anio") int anio,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.obtenerSecciones(anio)).build();
         } catch (jakarta.ws.rs.NotFoundException e) {
@@ -80,7 +94,10 @@ public class AnioResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Response crear(Map<String, Object> datos) {
+    public Response crear(Map<String, Object> datos, @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             int anio = numero(datos.get("anio"));
             LocalDate inicio = fecha(datos.get("fechaInicio"));
@@ -103,7 +120,11 @@ public class AnioResource {
     @Path("{anio}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response modificar(@PathParam("anio") int anio, Map<String, String> datos) {
+    public Response modificar(@PathParam("anio") int anio, Map<String, String> datos,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             LocalDate inicio = fecha(datos != null ? datos.get("fechaInicio") : null);
             LocalDate cierre = fecha(datos != null ? datos.get("fechaCierre") : null);
@@ -123,7 +144,11 @@ public class AnioResource {
     @PUT
     @Path("{anio}/activar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response activar(@PathParam("anio") int anio) {
+    public Response activar(@PathParam("anio") int anio,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.activar(anio);
             return Response.ok(Map.of("mensaje", "Año lectivo activado")).build();
@@ -141,7 +166,11 @@ public class AnioResource {
     @PUT
     @Path("{anio}/cerrar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cerrar(@PathParam("anio") int anio) {
+    public Response cerrar(@PathParam("anio") int anio,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.cerrar(anio);
             return Response.ok(Map.of("mensaje", "Año lectivo cerrado")).build();
@@ -159,7 +188,11 @@ public class AnioResource {
     @DELETE
     @Path("{anio}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response eliminar(@PathParam("anio") int anio) {
+    public Response eliminar(@PathParam("anio") int anio,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.eliminar(anio);
             return Response.ok(Map.of("mensaje", "Año lectivo eliminado")).build();
@@ -186,5 +219,20 @@ public class AnioResource {
             return null;
         }
         return LocalDate.parse(String.valueOf(v).trim());
+    }
+
+    private boolean esSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Super Admin".equals(rol);
+    }
+
+    private boolean esAdminOSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Admin".equals(rol) || "Super Admin".equals(rol);
+    }
+
+    private Response prohibido() {
+        return Response.status(Response.Status.FORBIDDEN)
+                .entity(Map.of("error", "No autorizado para esta accion")).build();
     }
 }

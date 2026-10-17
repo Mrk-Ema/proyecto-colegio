@@ -10,6 +10,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -35,7 +37,11 @@ public class CursoResource {
             @QueryParam("size") @DefaultValue("10") int size,
             @QueryParam("nombre") String nombre,
             @QueryParam("estado") String estado,
-            @QueryParam("grado") Integer grado) {
+            @QueryParam("grado") Integer grado,
+            @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.listar(nombre, estado, grado, page, size)).build();
         } catch (Exception e) {
@@ -49,7 +55,11 @@ public class CursoResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtener(@PathParam("id") int id) {
+    public Response obtener(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.obtener(id)).build();
         } catch (jakarta.ws.rs.NotFoundException e) {
@@ -67,7 +77,10 @@ public class CursoResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Response crear(Map<String, Object> datos) {
+    public Response crear(Map<String, Object> datos, @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             String nombre = datos != null ? String.valueOf(datos.getOrDefault("nombre", "")) : null;
             List<Integer> grados = new ArrayList<>();
@@ -97,7 +110,11 @@ public class CursoResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response modificar(@PathParam("id") int id, Map<String, String> datos) {
+    public Response modificar(@PathParam("id") int id, Map<String, String> datos,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             String nombre = datos != null ? datos.get("nombre") : null;
             servicio.modificar(id, nombre);
@@ -119,7 +136,11 @@ public class CursoResource {
     @PUT
     @Path("{id}/desactivar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response desactivar(@PathParam("id") int id) {
+    public Response desactivar(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.desactivar(id);
             return Response.ok(Map.of("mensaje", "Curso desactivado")).build();
@@ -140,7 +161,11 @@ public class CursoResource {
     @PUT
     @Path("{id}/activar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response activar(@PathParam("id") int id) {
+    public Response activar(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.activar(id);
             return Response.ok(Map.of("mensaje", "Curso activado")).build();
@@ -156,5 +181,20 @@ public class CursoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", "Error interno")).build();
         }
+    }
+
+    private boolean esSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Super Admin".equals(rol);
+    }
+
+    private boolean esAdminOSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Admin".equals(rol) || "Super Admin".equals(rol);
+    }
+
+    private Response prohibido() {
+        return Response.status(Response.Status.FORBIDDEN)
+                .entity(Map.of("error", "No autorizado para esta accion")).build();
     }
 }

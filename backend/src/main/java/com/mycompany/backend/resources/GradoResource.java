@@ -11,6 +11,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Map;
@@ -32,7 +34,10 @@ public class GradoResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listarActivos() {
+    public Response listarActivos(@Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(grados.listarActivos()).build();
         } catch (Exception e) {
@@ -53,7 +58,11 @@ public class GradoResource {
             @QueryParam("nivel") Integer nivel,
             @QueryParam("carrera") Integer carrera,
             @QueryParam("estado") String estado,
-            @QueryParam("anio") String anio) {
+            @QueryParam("anio") String anio,
+            @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.listar(nombre, nivel, carrera, estado, anio, page, size)).build();
         } catch (Exception e) {
@@ -67,7 +76,11 @@ public class GradoResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtener(@PathParam("id") int id) {
+    public Response obtener(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.obtener(id)).build();
         } catch (jakarta.ws.rs.NotFoundException e) {
@@ -84,7 +97,10 @@ public class GradoResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response crear(Map<String, Object> datos) {
+    public Response crear(Map<String, Object> datos, @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             String nombre = datos != null ? String.valueOf(datos.getOrDefault("nombre", "")) : null;
             Integer idNivel = entero(datos != null ? datos.get("idNivel") : null);
@@ -111,7 +127,11 @@ public class GradoResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response modificar(@PathParam("id") int id, Map<String, Object> datos) {
+    public Response modificar(@PathParam("id") int id, Map<String, Object> datos,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             String nombre = datos != null ? String.valueOf(datos.getOrDefault("nombre", "")) : null;
             Integer idNivel = entero(datos != null ? datos.get("idNivel") : null);
@@ -135,7 +155,11 @@ public class GradoResource {
     @PUT
     @Path("{id}/desactivar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response desactivar(@PathParam("id") int id) {
+    public Response desactivar(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.desactivar(id);
             return Response.ok(Map.of("mensaje", "Grado desactivado")).build();
@@ -156,7 +180,11 @@ public class GradoResource {
     @PUT
     @Path("{id}/activar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response activar(@PathParam("id") int id) {
+    public Response activar(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.activar(id);
             return Response.ok(Map.of("mensaje", "Grado activado")).build();
@@ -182,5 +210,20 @@ public class GradoResource {
             return n.intValue();
         }
         return Integer.parseInt(String.valueOf(v).trim());
+    }
+
+    private boolean esSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Super Admin".equals(rol);
+    }
+
+    private boolean esAdminOSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Admin".equals(rol) || "Super Admin".equals(rol);
+    }
+
+    private Response prohibido() {
+        return Response.status(Response.Status.FORBIDDEN)
+                .entity(Map.of("error", "No autorizado para esta accion")).build();
     }
 }

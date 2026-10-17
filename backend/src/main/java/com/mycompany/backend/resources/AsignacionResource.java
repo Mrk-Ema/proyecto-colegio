@@ -11,6 +11,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Map;
@@ -38,7 +40,11 @@ public class AsignacionResource {
             @QueryParam("seccion") Integer seccion,
             @QueryParam("curso") Integer curso,
             @QueryParam("maestro") String maestro,
-            @QueryParam("sinMaestro") @DefaultValue("false") boolean sinMaestro) {
+            @QueryParam("sinMaestro") @DefaultValue("false") boolean sinMaestro,
+            @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(servicio.listar(anio, grado, seccion, curso, maestro, sinMaestro, page, size)).build();
         } catch (IllegalArgumentException e) {
@@ -55,7 +61,10 @@ public class AsignacionResource {
     @GET
     @Path("maestros")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response maestros() {
+    public Response maestros(@Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             return Response.ok(empleados.listarMaestrosActivos()).build();
         } catch (Exception e) {
@@ -69,7 +78,10 @@ public class AsignacionResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response crear(Map<String, Object> datos) {
+    public Response crear(Map<String, Object> datos, @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.crear(numero(datos.get("anio")), numero(datos.get("idSeccion")),
                     numero(datos.get("idCurso")), numero(datos.get("idEmpleado")));
@@ -92,7 +104,11 @@ public class AsignacionResource {
     @Path("{id}/reasignar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response reasignar(@PathParam("id") int id, Map<String, Object> datos) {
+    public Response reasignar(@PathParam("id") int id, Map<String, Object> datos,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.reasignar(id, numero(datos.get("idEmpleado")));
             return Response.ok(Map.of("mensaje", "Maestro reasignado")).build();
@@ -113,7 +129,11 @@ public class AsignacionResource {
     @PUT
     @Path("{id}/quitar")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response quitar(@PathParam("id") int id) {
+    public Response quitar(@PathParam("id") int id,
+    @Context ContainerRequestContext req) {
+        if (!esAdminOSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             servicio.quitar(id);
             return Response.ok(Map.of("mensaje", "Asignación quitada")).build();
@@ -136,5 +156,20 @@ public class AsignacionResource {
             return n.intValue();
         }
         return Integer.parseInt(String.valueOf(v));
+    }
+
+    private boolean esSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Super Admin".equals(rol);
+    }
+
+    private boolean esAdminOSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Admin".equals(rol) || "Super Admin".equals(rol);
+    }
+
+    private Response prohibido() {
+        return Response.status(Response.Status.FORBIDDEN)
+                .entity(Map.of("error", "No autorizado para esta accion")).build();
     }
 }

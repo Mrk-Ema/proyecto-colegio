@@ -6,6 +6,8 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
@@ -24,7 +26,11 @@ public class EstructuraResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Response reconciliar(@PathParam("anio") int anio, Map<String, Object> datos) {
+    public Response reconciliar(@PathParam("anio") int anio, Map<String, Object> datos,
+    @Context ContainerRequestContext req) {
+        if (!esSuperAdmin(req)) {
+            return prohibido();
+        }
         try {
             List<Integer> grados = datos != null ? (List<Integer>) datos.get("grados") : null;
             servicio.modificarEstructura(anio, grados);
@@ -38,5 +44,20 @@ public class EstructuraResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", "Error interno")).build();
         }
+    }
+
+    private boolean esSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Super Admin".equals(rol);
+    }
+
+    private boolean esAdminOSuperAdmin(ContainerRequestContext req) {
+        Object rol = req.getProperty("rol");
+        return "Admin".equals(rol) || "Super Admin".equals(rol);
+    }
+
+    private Response prohibido() {
+        return Response.status(Response.Status.FORBIDDEN)
+                .entity(Map.of("error", "No autorizado para esta accion")).build();
     }
 }
