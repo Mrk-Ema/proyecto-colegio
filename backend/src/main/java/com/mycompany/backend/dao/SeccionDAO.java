@@ -46,6 +46,34 @@ public class SeccionDAO {
         }
     }
 
+    public List<Map<String, Object>> listarPorGrado(int idGrado, String estado) throws SQLException {
+        String sql = "SELECT id_seccion, nombre, estado FROM seccion WHERE id_grado = ?";
+        List<Object> p = new ArrayList<>();
+        p.add(idGrado);
+        if (estado != null && !estado.isBlank()) {
+            sql += " AND estado = ?";
+            p.add(estado);
+        }
+        sql += " ORDER BY nombre";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            for (int i = 0; i < p.size(); i++) {
+                ps.setObject(i + 1, p.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idSeccion", rs.getInt("id_seccion"));
+                    m.put("seccion", rs.getString("nombre"));
+                    m.put("estado", rs.getString("estado"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
     public boolean existePorNombreEnGrado(String nombre, int idGrado) throws SQLException {
         String sql = "SELECT COUNT(*) FROM seccion WHERE nombre = ? AND id_grado = ?";
         Connection cn = Conexion.obtener();

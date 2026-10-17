@@ -40,7 +40,7 @@ public class EstructuraDAO {
     }
 
     public List<Map<String, Object>> listarPorAnio(int anio) throws SQLException {
-        String sql = "SELECT e.id_estructura, g.id_grado, g.nombre AS grado, "
+        String sql = "SELECT e.id_estructura, g.id_grado, g.nombre AS grado, g.estado AS estado_grado, "
                 + "g.id_nivel, n.nombre AS nivel, g.id_carrera, c.nombre AS carrera "
                 + "FROM estructura_año e JOIN grado g ON g.id_grado = e.id_grado "
                 + "JOIN nivel n ON n.id_nivel = g.id_nivel "
@@ -56,6 +56,7 @@ public class EstructuraDAO {
                     fila.put("idEstructura", rs.getInt("id_estructura"));
                     fila.put("idGrado", rs.getInt("id_grado"));
                     fila.put("grado", rs.getString("grado"));
+                fila.put("estadoGrado", rs.getString("estado_grado"));
                     fila.put("idNivel", rs.getInt("id_nivel"));
                     fila.put("nivel", rs.getString("nivel"));
                     int ic = rs.getInt("id_carrera");
