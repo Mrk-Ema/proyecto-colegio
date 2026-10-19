@@ -1,0 +1,75 @@
+<h3>Cuotas por grado</h3>
+<div class="alert alert-info">
+  Los montos sirven para calcular los saldos y a los estudiantes morosos. Un monto puede ser 0, pero nunca negativo.
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <select class="form-select" [(ngModel)]="anio" (change)="cargar()">
+          @for (a of anios; track a.anio) {
+            <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+          }
+        </select>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="guardar()" [disabled]="guardando || !montosValidos()">
+          <i class="bi bi-save me-1"></i>Guardar cuotas
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+@if (!grados.length && !error) {
+  <div class="alert alert-info">Elige un año lectivo para ver sus grados.</div>
+}
+
+@if (grados.length) {
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Nivel</th>
+        <th>Grado</th>
+        <th>Carrera</th>
+        <th style="width: 220px">Monto de inscripción</th>
+        <th style="width: 220px">Monto de mensualidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (g of grados; track g.idGrado) {
+        <tr>
+          <td>{{ g.nivel }}</td>
+          <td>{{ g.grado }}</td>
+          <td>{{ g.carrera ?? '—' }}</td>
+          <td>
+            <input
+              class="form-control form-control-sm"
+              type="number"
+              min="0"
+              step="0.01"
+              [(ngModel)]="montos[g.idGrado].inscripcion"
+            />
+          </td>
+          <td>
+            <input
+              class="form-control form-control-sm"
+              type="number"
+              min="0"
+              step="0.01"
+              [(ngModel)]="montos[g.idGrado].mensualidad"
+            />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div class="text-muted small">Deja en blanco los grados que todavía no tienen monto.</div>
+}

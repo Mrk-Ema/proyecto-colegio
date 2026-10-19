@@ -1,0 +1,93 @@
+@if (esEditar) {
+  <h3>Modificar actividad</h3>
+} @else {
+  <h3>Nueva actividad</h3>
+  <div class="alert alert-info">
+    La actividad queda Activa y se cobra en el ciclo en que se registra el pago.
+  </div>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body" style="max-width: 640px">
+    <div class="mb-2">
+      <label class="form-label">Nombre *</label>
+      <input class="form-control" [(ngModel)]="nombre" maxlength="150" />
+      <div class="form-text">No se permiten nombres repetidos.</div>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Descripción</label>
+      <input class="form-control" [(ngModel)]="descripcion" maxlength="255" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Costo *</label>
+      <input class="form-control" [(ngModel)]="costo" type="number" min="0" step="0.01" />
+      <div class="form-text">Puede ser 0, pero nunca negativo.</div>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Alcance *</label>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="alcanceTodos"
+          name="alcance"
+          value="Todos"
+          [checked]="alcance === 'Todo el colegio'"
+          (change)="alcance = 'Todo el colegio'"
+        />
+        <label class="form-check-label" for="alcanceTodos">Todo el colegio</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="alcanceGrados"
+          name="alcance"
+          value="Grados"
+          [checked]="alcance === 'Grados especificos'"
+          (change)="alcance = 'Grados especificos'"
+        />
+        <label class="form-check-label" for="alcanceGrados">Grados específicos</label>
+      </div>
+    </div>
+
+    @if (alcance === 'Grados especificos') {
+      <div class="mb-3">
+        <label class="form-label">Grados *</label>
+        @for (grupo of gruposGrados(); track grupo.etiqueta) {
+          <div class="mb-1">
+            <div class="small fw-bold">{{ grupo.etiqueta }}</div>
+            @for (g of grupo.opciones; track g.idGrado) {
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [id]="'grado-' + g.idGrado"
+                  [checked]="marcada(g.idGrado)"
+                  (change)="alternar(g.idGrado, $any($event.target).checked)"
+                />
+                <label class="form-check-label" [for]="'grado-' + g.idGrado">{{ g.nombre }}</label>
+              </div>
+            }
+          </div>
+        }
+        @if (esEditar) {
+          <div class="alert alert-secondary mt-2">
+            <i class="bi bi-info-circle me-1"></i>Un grado con pagos ya registrados no se puede quitar del alcance.
+          </div>
+        }
+      </div>
+    }
+
+    <div class="mt-3">
+      <button class="btn btn-primary me-2" (click)="guardar()">
+        {{ esEditar ? 'Guardar cambios' : 'Crear actividad' }}
+      </button>
+      <a class="btn btn-outline-secondary" routerLink="/actividades">Volver</a>
+    </div>
+  </div>
+</div>

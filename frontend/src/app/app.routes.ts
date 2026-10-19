@@ -30,6 +30,9 @@ import { EmpleadoForm } from './empleado-form/empleado-form';
 import { EmpleadoDetalle } from './empleado-detalle/empleado-detalle';
 import { Inscripciones } from './inscripciones/inscripciones';
 import { InscripcionForm } from './inscripcion-form/inscripcion-form';
+import { Cuotas } from './cuotas/cuotas';
+import { Actividades } from './actividades/actividades';
+import { ActividadForm } from './actividad-form/actividad-form';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -74,6 +77,10 @@ export const routes: Routes = [
       { path: 'inscripciones', component: Inscripciones, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
       { path: 'inscripciones/nuevo', component: InscripcionForm, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
       { path: 'inscripciones/:id/editar', component: InscripcionForm, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'cuotas', component: Cuotas, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'actividades', component: Actividades, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'actividades/nuevo', component: ActividadForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'actividades/:id/editar', component: ActividadForm, data: { roles: ['Super Admin', 'Admin'] } },
     ],
   },
   { path: '**', redirectTo: '' },

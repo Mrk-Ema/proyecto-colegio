@@ -29,6 +29,8 @@ export class Navbar {
     { ruta: '/estudiantes', texto: 'Estudiantes', roles: ['Super Admin', 'Admin', 'Secretaria'] },
     { ruta: '/empleados', texto: 'Empleados', roles: ['Super Admin', 'Admin'] },
     { ruta: '/inscripciones', texto: 'Inscripciones', roles: ['Super Admin', 'Admin', 'Secretaria'] },
+    { ruta: '/cuotas', texto: 'Cuotas', roles: ['Super Admin', 'Admin'] },
+    { ruta: '/actividades', texto: 'Actividades', roles: ['Super Admin', 'Admin', 'Secretaria'] },
     { ruta: '/perfil', texto: 'Mi perfil', roles: ['Super Admin', 'Admin', 'Secretaria', 'Maestro', 'Bibliotecario', 'Estudiante'] },
   ];
 
