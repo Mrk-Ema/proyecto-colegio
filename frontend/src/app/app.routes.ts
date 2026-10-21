@@ -33,6 +33,8 @@ import { InscripcionForm } from './inscripcion-form/inscripcion-form';
 import { Cuotas } from './cuotas/cuotas';
 import { Actividades } from './actividades/actividades';
 import { ActividadForm } from './actividad-form/actividad-form';
+import { Pagos } from './pagos/pagos';
+import { PagoForm } from './pago-form/pago-form';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -81,6 +83,9 @@ export const routes: Routes = [
       { path: 'actividades', component: Actividades, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
       { path: 'actividades/nuevo', component: ActividadForm, data: { roles: ['Super Admin', 'Admin'] } },
       { path: 'actividades/:id/editar', component: ActividadForm, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'pagos', component: Pagos, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'pagos/registrar', component: PagoForm, data: { roles: ['Secretaria'] } },
+      { path: 'pagos/registrar/actividad', component: PagoForm, data: { roles: ['Secretaria'] } },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -21,7 +21,7 @@ export class InscripcionForm implements OnInit {
   /** Estudiante elegido en la inscripción. */
   idEstudiante: number | null = null;
   estudiante: any = null;
-  /** Texto del buscador de estudiantes: nombre o carné. */
+  /** Texto del buscador de estudiantes: nombre o carnet. */
   busqueda: string = '';
   resultados: any[] = [];
   buscando = false;
@@ -93,7 +93,7 @@ export class InscripcionForm implements OnInit {
     });
   }
 
-  /** Buscador de estudiantes Activos por nombre o carné. */
+  /** Buscador de estudiantes Activos por nombre o carnet. */
   buscar() {
     this.buscando = true;
     this.resultados = [];

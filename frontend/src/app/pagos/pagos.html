@@ -1,0 +1,153 @@
+<h3>Pagos</h3>
+<div class="alert alert-info">
+  Los pagos se registran por estudiante: primero se busca por su carnet. El monto sale de la cuota
+  configurada o del costo de la actividad, nunca se escribe a mano.
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <input
+          class="form-control"
+          placeholder="Carnet"
+          [(ngModel)]="carnet"
+          (keyup.enter)="buscar()"
+        />
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="buscar()" [disabled]="buscando">
+          <i class="bi bi-search me-1"></i>Buscar
+        </button>
+      </div>
+      @if (esSecretaria()) {
+        <div class="col-auto">
+          <a class="btn btn-outline-primary" routerLink="/pagos/registrar">
+            <i class="bi bi-plus-lg me-1"></i>Pago de inscripción o mensualidad
+          </a>
+        </div>
+        <div class="col-auto">
+          <a class="btn btn-outline-primary" routerLink="/pagos/registrar/actividad">
+            <i class="bi bi-plus-lg me-1"></i>Pago de actividad
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+
+@if (estudiante) {
+  <div class="card shadow-sm mb-3">
+    <div class="card-body py-2">
+      <strong>{{ estudiante.nombres }} {{ estudiante.apellidos }}</strong>
+      <span class="text-muted ms-2">Carnet {{ estudiante.carnet }}</span>
+      <span
+        class="badge ms-2"
+        [class.text-bg-success]="estudiante.estado === 'Activo'"
+        [class.text-bg-secondary]="estudiante.estado !== 'Activo'"
+        >{{ estudiante.estado }}</span
+      >
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <div class="row g-2">
+        <div class="col">
+          <select class="form-select" [(ngModel)]="filtroConcepto" (change)="filtrar()">
+            <option value="">Todos los conceptos</option>
+            <option value="Inscripcion">Inscripción</option>
+            <option value="Mensualidad">Mensualidad</option>
+            <option value="Actividad">Actividad</option>
+          </select>
+        </div>
+        <div class="col">
+          <select class="form-select" [(ngModel)]="filtroEstado" (change)="filtrar()">
+            <option value="">Todos los estados</option>
+            <option value="Registrado">Registrado</option>
+            <option value="Anulado">Anulado</option>
+          </select>
+        </div>
+        <div class="col">
+          <input class="form-control" type="date" [(ngModel)]="filtroDesde" (change)="filtrar()" />
+        </div>
+        <div class="col">
+          <input class="form-control" type="date" [(ngModel)]="filtroHasta" (change)="filtrar()" />
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-secondary" (click)="filtrar()">
+            <i class="bi bi-funnel me-1"></i>Filtrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (!datos.length) {
+    <div class="alert alert-info">Este estudiante no tiene pagos registrados.</div>
+  } @else {
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Fecha</th>
+          <th>Concepto</th>
+          <th>Mes</th>
+          <th>Monto</th>
+          <th>Registró</th>
+          <th>Estado</th>
+          @if (esSecretaria()) {
+            <th></th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (f of datos; track f.idPago) {
+          <tr>
+            <td>{{ f.numeroCorrelativo }}</td>
+            <td>{{ f.fechaPago }}</td>
+            <td>{{ nombreConcepto(f.concepto) }}</td>
+            <td>{{ f.mes ?? '—' }}</td>
+            <td>{{ f.monto | number: '1.2-2' }}</td>
+            <td>{{ f.registraCorreo }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.text-bg-success]="f.estado === 'Registrado'"
+                [class.text-bg-secondary]="f.estado === 'Anulado'"
+                >{{ f.estado }}</span
+              >
+              @if (f.estado === 'Anulado' && f.motivoAnulacion) {
+                <div class="small text-muted">{{ f.motivoAnulacion }}</div>
+              }
+            </td>
+            @if (esSecretaria()) {
+              <td class="text-nowrap">
+                @if (f.estado === 'Registrado') {
+                  <button class="btn btn-sm btn-outline-danger" (click)="anular(f)">
+                    <i class="bi bi-slash-circle me-1"></i>Anular
+                  </button>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="d-flex gap-2 align-items-center">
+      <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+      <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+      <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+    </div>
+  }
+} @else {
+  <div class="alert alert-info">Busca un estudiante para ver sus pagos.</div>
+}

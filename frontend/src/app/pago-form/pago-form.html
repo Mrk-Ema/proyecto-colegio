@@ -1,0 +1,112 @@
+@if (esActividad) {
+  <h3>Pago de actividad extracurricular</h3>
+} @else {
+  <h3>Pago de inscripción o mensualidad</h3>
+}
+<div class="alert alert-info">
+  El monto sale de la cuota del grado o del costo de la actividad. El sistema registra la fecha, el
+  número correlativo y la Secretaria que realiza la transacción.
+</div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body" style="max-width: 640px">
+    <div class="row g-2 mb-2">
+      <div class="col">
+        <label class="form-label">Carnet del estudiante *</label>
+        <input class="form-control" [(ngModel)]="carnet" (keyup.enter)="cargar()" />
+      </div>
+      <div class="col-auto" style="align-self: end">
+        <button class="btn btn-secondary" (click)="cargar()">
+          <i class="bi bi-search me-1"></i>Buscar
+        </button>
+      </div>
+    </div>
+
+    @if (estudiante) {
+      <div class="alert alert-secondary py-2">
+        <strong>{{ estudiante.nombres }} {{ estudiante.apellidos }}</strong>
+        <span class="text-muted ms-2">Carnet {{ estudiante.carnet }}</span>
+      </div>
+
+      <div class="row g-2 mb-2">
+        <div class="col">
+          <label class="form-label">Año lectivo *</label>
+          <select class="form-select" [(ngModel)]="anio" (change)="cambiarAnio()">
+            <option [ngValue]="null">Seleccione</option>
+            @for (a of anios; track a) {
+              <option [ngValue]="a">{{ a }}</option>
+            }
+          </select>
+        </div>
+        <div class="col">
+          <label class="form-label">Grado</label>
+          <input class="form-control" [value]="inscripcion?.grado ?? '—'" disabled />
+        </div>
+        <div class="col">
+          <label class="form-label">Sección</label>
+          <input class="form-control" [value]="inscripcion?.seccion ?? '—'" disabled />
+        </div>
+      </div>
+
+      @if (!inscripcion) {
+        <div class="alert alert-warning">
+          Este estudiante no está inscrito en el año elegido.
+        </div>
+      } @else {
+        @if (esActividad) {
+          <div class="mb-2">
+            <label class="form-label">Actividad *</label>
+            <select class="form-select" [(ngModel)]="idActividad">
+              <option [ngValue]="null">Seleccione</option>
+              @for (a of actividades; track a.idActividad) {
+                <option [ngValue]="a.idActividad">{{ a.nombre }}</option>
+              }
+            </select>
+            @if (!actividades.length) {
+              <div class="form-text">No hay actividades disponibles para este grado.</div>
+            }
+          </div>
+        } @else {
+          <div class="row g-2 mb-2">
+            <div class="col">
+              <label class="form-label">Concepto *</label>
+              <select class="form-select" [(ngModel)]="concepto">
+                <option value="Inscripcion">Inscripción</option>
+                <option value="Mensualidad">Mensualidad</option>
+              </select>
+            </div>
+            @if (concepto === 'Mensualidad') {
+              <div class="col">
+                <label class="form-label">Mes *</label>
+                <select class="form-select" [(ngModel)]="mes">
+                  <option value="">Seleccione</option>
+                  @for (m of meses; track m) {
+                    <option [value]="m">{{ m }}</option>
+                  }
+                </select>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="mb-2">
+          <label class="form-label">Monto</label>
+          <input class="form-control" [value]="monto() ?? '—'" disabled />
+        </div>
+      }
+
+      <div class="mt-3">
+        <button class="btn btn-primary me-2" (click)="guardar()" [disabled]="guardando">
+          {{ esActividad ? 'Registrar pago' : 'Registrar pago' }}
+        </button>
+        <a class="btn btn-outline-secondary" routerLink="/pagos">Volver</a>
+      </div>
+    }
+  </div>
+</div>
