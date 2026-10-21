@@ -200,6 +200,36 @@ public class InscripcionDAO {
         }
     }
 
+    /** Inscripción de un estudiante en un año, con su grado y su sección. */
+    public Map<String, Object> buscarPorEstudianteYAnio(int idEstudiante, int anio) throws SQLException {
+        String sql = "SELECT i.id_inscripcion, i.id_año_lectivo AS anio, i.id_seccion, "
+                + "s.id_grado, g.nombre AS grado, s.nombre AS seccion, i.fecha_inscripcion "
+                + "FROM inscripcion i "
+                + "JOIN seccion s ON s.id_seccion = i.id_seccion "
+                + "JOIN grado g ON g.id_grado = s.id_grado "
+                + "WHERE i.id_estudiante = ? AND i.id_año_lectivo = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstudiante);
+            ps.setInt(2, anio);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                Map<String, Object> m = new HashMap<>();
+                m.put("idInscripcion", rs.getInt("id_inscripcion"));
+                m.put("anio", rs.getInt("anio"));
+                m.put("idSeccion", rs.getInt("id_seccion"));
+                m.put("idGrado", rs.getInt("id_grado"));
+                m.put("grado", rs.getString("grado"));
+                m.put("seccion", rs.getString("seccion"));
+                Date f = rs.getDate("fecha_inscripcion");
+                m.put("fechaInscripcion", f != null ? f.toLocalDate().toString() : null);
+                return m;
+            }
+        }
+    }
+
     public void cambiarSeccion(int idInscripcion, int idSeccion) throws SQLException {
         String sql = "UPDATE inscripcion SET id_seccion = ? WHERE id_inscripcion = ?";
         Connection cn = Conexion.obtener();

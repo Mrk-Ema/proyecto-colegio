@@ -17,10 +17,10 @@ import jakarta.ws.rs.core.Response;
 import java.util.Map;
 
 /**
- * POST /api/v1/inscripciones                          inscribir estudiante (CU051)
- * GET  /api/v1/inscripciones?page&size&anio&nivel&grado&seccion&estudiante   (CU052)
- * PUT  /api/v1/inscripciones/{id}                     cambiar sección (CU053)
- * GET  /api/v1/inscripciones/{id}                     detalle (CU053)
+ * POST /api/v1/inscripciones                         inscribir estudiante 
+ * GET  /api/v1/inscripciones?page&size&anio&nivel&grado&seccion&estudiante   
+ * PUT  /api/v1/inscripciones/{id}                    cambiar sección 
+ * GET  /api/v1/inscripciones/{id}                    detalle 
  * GET  /api/v1/inscripciones/anios                   años no cerrados para el formulario
  * GET  /api/v1/inscripciones/grados?anio             grados de la estructura del año
  * GET  /api/v1/inscripciones/secciones?grado         secciones Activas del grado

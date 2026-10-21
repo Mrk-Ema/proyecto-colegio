@@ -99,6 +99,28 @@ public class EstudianteDAO {
         }
     }
 
+    /** Busca un estudiante por su carnet, para registrarle un pago. */
+    public Map<String, Object> buscarPorCarne(String carnet) throws SQLException {
+        String sql = "SELECT e.id_estudiante, e.carnet, e.nombres, e.apellidos, e.estado "
+                + "FROM estudiante e WHERE e.carnet = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, carnet);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                Map<String, Object> m = new HashMap<>();
+                m.put("idEstudiante", rs.getInt("id_estudiante"));
+                m.put("carnet", rs.getString("carnet"));
+                m.put("nombres", rs.getString("nombres"));
+                m.put("apellidos", rs.getString("apellidos"));
+                m.put("estado", rs.getString("estado"));
+                return m;
+            }
+        }
+    }
+
     public int contar(String nombre, String carne, String estado,
             Integer grado, Integer seccion) throws SQLException {
         StringBuilder sb = new StringBuilder(

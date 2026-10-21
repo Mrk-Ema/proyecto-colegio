@@ -64,6 +64,27 @@ public class CuotaDAO {
         }
     }
 
+    /** Cuota configurada de un grado en un año, con sus dos montos. */
+    public Map<String, Object> buscarPorGradoYAnio(int idGrado, int anio) throws SQLException {
+        String sql = "SELECT id_cuota, monto_inscripcion, monto_mensualidad FROM cuota "
+                + "WHERE id_grado = ? AND id_año_lectivo = ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idGrado);
+            ps.setInt(2, anio);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                Map<String, Object> m = new HashMap<>();
+                m.put("idCuota", rs.getInt("id_cuota"));
+                m.put("montoInscripcion", rs.getBigDecimal("monto_inscripcion"));
+                m.put("montoMensualidad", rs.getBigDecimal("monto_mensualidad"));
+                return m;
+            }
+        }
+    }
+
     public int crear(int anio, int idGrado, BigDecimal inscripcion, BigDecimal mensualidad)
             throws SQLException {
         String sql = "INSERT INTO cuota (monto_inscripcion, monto_mensualidad, id_año_lectivo, id_grado) "

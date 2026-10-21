@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * Actividades extracurriculares: nombre único en el catálogo, costo no negativo y
  * alcance de todo el colegio o de grados específicos. Un grado sale del alcance
- * únicamente cuando ninguno de sus estudiantes tiene un pago registrado.
+ * únicamente cuando ninguno de sus estudiantes tiene un pago registrado
  */
 public class ActividadService {
 
@@ -54,6 +54,8 @@ public class ActividadService {
         return r;
     }
 
+
+    
     /** Detalle de una actividad con los grados de su alcance. */
     public Map<String, Object> obtener(int idActividad) throws SQLException {
         Map<String, Object> a = dao.buscarPorId(idActividad);

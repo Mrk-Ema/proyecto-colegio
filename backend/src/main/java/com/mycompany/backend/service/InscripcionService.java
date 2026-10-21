@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * CU051 inscribir estudiante, CU052 listar y filtrar, CU053 modificar inscripcion.
- * Actor: Secretaria (tambien Admin y Super Admin).
+ * inscribir estudiante, listar y filtrar, modificar inscripcion
+ * Actor: Secretaria (tambien Admin y Super Admin)
  */
 public class InscripcionService {
 
@@ -33,8 +33,8 @@ public class InscripcionService {
     private final NivelDAO nivelDAO = new NivelDAO();
 
     /**
-     * Anos que admite una inscripcion: todo menos Cerrado.
-     * El que se propone por defecto es el Activo y, si no hay, el primero disponible.
+     * años que admite una inscripcion: todo menos cerrado
+     * El que se propone por defecto es el Activo y, si no hay, el primero disponible
      */
     public Map<String, Object> aniosDisponibles() throws SQLException {
         List<Map<String, Object>> lista = new ArrayList<>();
@@ -66,8 +66,8 @@ public class InscripcionService {
     }
 
     /**
-     * CU051: grados de la estructura del ano. Solo los Activos y, si son de
-     * Diversificado, solo si su carrera sigue Activa.
+     * grados de la estructura del año. Solo los activos y, si son de
+     * Diversificado, solo si su carrera sigue Activa
      */
     public List<Map<String, Object>> gradosDisponibles(int anio) throws SQLException {
         AnioLectivo a = anioDAO.buscarPorAnio(anio);
@@ -106,7 +106,7 @@ public class InscripcionService {
         return out;
     }
 
-    /** CU051: secciones Activas de un grado. */
+    /** secciones activas de un grado. */
     public List<Map<String, Object>> seccionesDeGrado(int idGrado) throws SQLException {
         if (gradoDAO.buscarPorId(idGrado) == null) {
             throw new NotFoundException("Grado no encontrado");
@@ -114,7 +114,7 @@ public class InscripcionService {
         return seccionDAO.listarPorGrado(idGrado, "Activo");
     }
 
-    /** CU051: inscribe a un estudiante Activo en un grado y seccion de un ano no Cerrado. */
+    /** inscribe a un estudiante Activo en un grado y seccion de un año no Cerrado. */
     public Map<String, Object> crear(Map<String, Object> datos) throws Exception {
         int idEstudiante = entero(datos.get("idEstudiante"), "Estudiante obligatorio");
         Integer anio = enteroONulo(datos.get("anio"));
@@ -177,7 +177,7 @@ public class InscripcionService {
         }
     }
 
-    /** CU052: listado paginado con filtros. */
+    /** listado paginado con filtros. */
     public Map<String, Object> listar(Integer anio, Integer nivel, Integer grado, Integer seccion,
             String estudiante, int page, int size) throws Exception {
         if (page < 1) {
@@ -206,7 +206,7 @@ public class InscripcionService {
         return nivelDAO.listar();
     }
 
-    /** CU053: detalle de una inscripción. */
+    /** detalle de una inscripción. */
     public Map<String, Object> obtener(int idInscripcion) throws SQLException {
         Map<String, Object> f = dao.buscarPorId(idInscripcion);
         if (f == null) {
@@ -215,7 +215,7 @@ public class InscripcionService {
         return f;
     }
 
-    /** CU053: solo cambia la sección; estudiante, año y grado quedan fijos. */
+    /** solo cambia la sección; estudiante, año y grado quedan fijos. */
     public void modificar(int idInscripcion, Map<String, Object> datos) throws Exception {
         Map<String, Object> actual = dao.buscarPorId(idInscripcion);
         if (actual == null) {

@@ -246,6 +246,35 @@ public class ActividadDAO {
     }
 
     /**
+     * Actividades activas que le tocan a un grado, las de todo el colegio
+     * y las que lo tienen en su lista de grados.
+     */
+    public List<Map<String, Object>> listarActivasParaGrado(int idGrado) throws SQLException {
+        String sql = "SELECT DISTINCT a.id_actividad, a.nombre, a.descripcion, a.costo, a.alcance "
+                + "FROM actividad_extracurricular a "
+                + "LEFT JOIN actividad_grado ag ON ag.id_actividad = a.id_actividad "
+                + "WHERE a.estado = 'Activo' AND (a.alcance = 'Todo el colegio' OR ag.id_grado = ?) "
+                + "ORDER BY a.nombre";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idGrado);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idActividad", rs.getInt("id_actividad"));
+                    m.put("nombre", rs.getString("nombre"));
+                    m.put("descripcion", rs.getString("descripcion"));
+                    m.put("costo", rs.getBigDecimal("costo"));
+                    m.put("alcance", rs.getString("alcance"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
+    /**
      * Un grado solo sale del alcance si ninguno de sus estudiantes tiene un pago
      * registrado de la actividad. Los pagos ya cobrados no se tocan.
      */
