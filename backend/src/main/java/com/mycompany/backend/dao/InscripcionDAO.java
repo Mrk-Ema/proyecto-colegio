@@ -230,6 +230,80 @@ public class InscripcionDAO {
         }
     }
 
+    /** Inscritos de un curso (nómina), filtrando por nombre o carné. */
+    public List<Map<String, Object>> listarNominaPorAsignacion(int idAsignacion, String nombre,
+            int limit, int offset) throws SQLException {
+        String sql = "SELECT i.id_inscripcion, e.id_estudiante, e.carnet, e.nombres, e.apellidos, "
+                + "e.estado AS estado_estudiante, i.fecha_inscripcion "
+                + "FROM inscripcion i "
+                + "JOIN estudiante e ON e.id_estudiante = i.id_estudiante "
+                + "JOIN seccion s ON s.id_seccion = i.id_seccion "
+                + "JOIN asignacion_maestro am ON am.id_seccion = s.id_seccion "
+                + "WHERE am.id_asignacion = ? AND i.id_año_lectivo = am.id_año_lectivo";
+        List<Object> p = new ArrayList<>();
+        p.add(idAsignacion);
+        if (nombre != null && !nombre.isBlank()) {
+            sql += " AND (e.nombres LIKE ? OR e.apellidos LIKE ? OR e.carnet LIKE ?)";
+            String like = "%" + nombre.trim() + "%";
+            p.add(like);
+            p.add(like);
+            p.add(like);
+        }
+        sql += " ORDER BY e.apellidos, e.nombres LIMIT ? OFFSET ?";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            int i = 1;
+            for (; i <= p.size(); i++) {
+                ps.setObject(i, p.get(i - 1));
+            }
+            ps.setInt(i++, limit);
+            ps.setInt(i, offset);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idInscripcion", rs.getInt("id_inscripcion"));
+                    m.put("idEstudiante", rs.getInt("id_estudiante"));
+                    m.put("carnet", rs.getString("carnet"));
+                    m.put("nombres", rs.getString("nombres"));
+                    m.put("apellidos", rs.getString("apellidos"));
+                    m.put("estadoEstudiante", rs.getString("estado_estudiante"));
+                    Date f = rs.getDate("fecha_inscripcion");
+                    m.put("fechaInscripcion", f != null ? f.toLocalDate().toString() : null);
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
+    public int contarNominaPorAsignacion(int idAsignacion, String nombre) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM inscripcion i "
+                + "JOIN estudiante e ON e.id_estudiante = i.id_estudiante "
+                + "JOIN seccion s ON s.id_seccion = i.id_seccion "
+                + "JOIN asignacion_maestro am ON am.id_seccion = s.id_seccion "
+                + "WHERE am.id_asignacion = ? AND i.id_año_lectivo = am.id_año_lectivo";
+        List<Object> p = new ArrayList<>();
+        p.add(idAsignacion);
+        if (nombre != null && !nombre.isBlank()) {
+            sql += " AND (e.nombres LIKE ? OR e.apellidos LIKE ? OR e.carnet LIKE ?)";
+            String like = "%" + nombre.trim() + "%";
+            p.add(like);
+            p.add(like);
+            p.add(like);
+        }
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            for (int i = 0; i < p.size(); i++) {
+                ps.setObject(i + 1, p.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+    }
+
     public void cambiarSeccion(int idInscripcion, int idSeccion) throws SQLException {
         String sql = "UPDATE inscripcion SET id_seccion = ? WHERE id_inscripcion = ?";
         Connection cn = Conexion.obtener();

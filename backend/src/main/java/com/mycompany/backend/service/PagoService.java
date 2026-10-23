@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Registro de pagos de los estudiantes. El monto nunca se escribe a mano:
  * sale de la cuota del grado o del costo de la actividad, y solo una
- * Secretaria puede registrar y anular pagos.
+ * Secretaria puede registrar y anular pagos
  */
 public class PagoService {
 

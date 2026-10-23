@@ -245,6 +245,80 @@ public class AsignacionDAO {
         }
     }
 
+    /**
+     * Asignaciones de un maestro en un año no Cerrado, con nivel, grado, sección,
+     * curso, año y estado de la ponderación (Sin definir/Definida).
+     */
+    public List<Map<String, Object>> listarPorEmpleado(int idEmpleado, Integer anio) throws SQLException {
+        String sql = "SELECT am.id_asignacion, am.id_año_lectivo, s.id_seccion, s.nombre AS seccion, "
+                + "g.id_grado, g.nombre AS grado, n.id_nivel, n.nombre AS nivel, "
+                + "c.id_curso, c.nombre AS curso, "
+                + "CASE WHEN EXISTS (SELECT 1 FROM actividad_evaluable ae WHERE ae.id_asignacion = am.id_asignacion) "
+                + "THEN 'Definida' ELSE 'Sin definir' END AS estadoPonderacion "
+                + "FROM asignacion_maestro am "
+                + "JOIN seccion s ON s.id_seccion = am.id_seccion "
+                + "JOIN grado g ON g.id_grado = s.id_grado "
+                + "JOIN nivel n ON n.id_nivel = g.id_nivel "
+                + "JOIN curso c ON c.id_curso = am.id_curso "
+                + "JOIN año_lectivo a ON a.id_año_lectivo = am.id_año_lectivo "
+                + "WHERE am.id_empleado = ? AND a.estado <> 'Cerrado'";
+        List<Object> p = new ArrayList<>();
+        p.add(idEmpleado);
+        if (anio != null) {
+            sql += " AND am.id_año_lectivo = ?";
+            p.add(anio);
+        }
+        sql += " ORDER BY am.id_año_lectivo DESC, g.nombre, s.nombre";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            for (int i = 0; i < p.size(); i++) {
+                ps.setObject(i + 1, p.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idAsignacion", rs.getInt("id_asignacion"));
+                    m.put("anio", rs.getInt("id_año_lectivo"));
+                    m.put("idSeccion", rs.getInt("id_seccion"));
+                    m.put("seccion", rs.getString("seccion"));
+                    m.put("idGrado", rs.getInt("id_grado"));
+                    m.put("grado", rs.getString("grado"));
+                    m.put("idNivel", rs.getInt("id_nivel"));
+                    m.put("nivel", rs.getString("nivel"));
+                    m.put("idCurso", rs.getInt("id_curso"));
+                    m.put("curso", rs.getString("curso"));
+                    m.put("estadoPonderacion", rs.getString("estadoPonderacion"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
+    /** Años no Cerrados en los que un maestro tiene asignaciones. */
+    public List<Map<String, Object>> listarAniosPorEmpleado(int idEmpleado) throws SQLException {
+        String sql = "SELECT DISTINCT am.id_año_lectivo AS anio, a.estado "
+                + "FROM asignacion_maestro am "
+                + "JOIN año_lectivo a ON a.id_año_lectivo = am.id_año_lectivo "
+                + "WHERE am.id_empleado = ? AND a.estado <> 'Cerrado' "
+                + "ORDER BY am.id_año_lectivo DESC";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEmpleado);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("anio", rs.getInt("anio"));
+                    m.put("estado", rs.getString("estado"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
+
     public List<Map<String, Object>> listarSinMaestro(int anio, int idSeccion) throws SQLException {
         String sql = "SELECT c.id_curso, c.nombre AS curso FROM estructura_año e "
                 + "JOIN curriculo cu ON cu.id_estructura = e.id_estructura JOIN curso c ON c.id_curso = cu.id_curso "
