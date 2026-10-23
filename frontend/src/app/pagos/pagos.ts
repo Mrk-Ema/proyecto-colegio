@@ -136,6 +136,25 @@ export class Pagos implements OnInit, OnDestroy {
     });
   }
 
+  /** Descarga el comprobante en PDF y lo abre en una pestaña nueva. */
+  emitirComprobante(f: any) {
+    this.error = '';
+    this.api.comprobante(f.idPago).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const ventana = window.open(url, '_blank');
+        if (!ventana) {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `comprobante-${f.numeroCorrelativo}.pdf`;
+          a.click();
+        }
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      },
+      error: (e) => (this.error = e.error?.error ?? 'No se pudo emitir el comprobante'),
+    });
+  }
+
   nombreConcepto(c: string): string {
     return c === 'Inscripcion' ? 'Inscripción' : c === 'Mensualidad' ? 'Mensualidad' : 'Actividad';
   }

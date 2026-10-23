@@ -1,0 +1,143 @@
+<h3>Solvencias</h3>
+<div class="alert alert-info">
+  La solvencia se genera solo si el estudiante no tiene saldos pendientes en el año lectivo elegido.
+  Si tiene deuda, se muestra el detalle y no se genera la constancia.
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <input
+          class="form-control"
+          placeholder="Carnet del estudiante"
+          [(ngModel)]="carnet"
+          (keyup.enter)="buscar()"
+        />
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="buscar()" [disabled]="buscando">
+          <i class="bi bi-search me-1"></i>Buscar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (anios.length) {
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col">
+          <label class="form-label">Año lectivo</label>
+          <select class="form-select" [(ngModel)]="anio">
+            @for (a of anios; track a) {
+              <option [ngValue]="a">{{ a }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-primary" (click)="calcular()" [disabled]="buscando">
+            <i class="bi bi-calculator me-1"></i>Calcular
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+@if (resultado) {
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <h5 class="mb-3">{{ resultado.nombres }} {{ resultado.apellidos }} <small class="text-muted">{{ resultado.carnet }}</small></h5>
+      <div class="row g-2 mb-3">
+        <div class="col">
+          <div class="text-muted small">Grado</div>
+          <div>{{ resultado.grado }}</div>
+        </div>
+        <div class="col">
+          <div class="text-muted small">Sección</div>
+          <div>{{ resultado.seccion }}</div>
+        </div>
+        <div class="col">
+          <div class="text-muted small">Año lectivo</div>
+          <div>{{ resultado.anio }}</div>
+        </div>
+      </div>
+
+      <table class="table table-sm mb-3">
+        <tbody>
+          <tr>
+            <th>Cuota de inscripción</th>
+            <td class="text-end">{{ resultado.detalle.inscripcion | number: '1.2-2' }}</td>
+          </tr>
+          <tr>
+            <th>Mensualidades ({{ resultado.detalle.mesesTranscurridos }} meses × {{ resultado.detalle.montoMensualidad | number: '1.2-2' }})</th>
+            <td class="text-end">{{ resultado.detalle.subtotalMensualidades | number: '1.2-2' }}</td>
+          </tr>
+          <tr class="fw-bold">
+            <th>Total adeudado</th>
+            <td class="text-end">{{ resultado.detalle.totalAdeudado | number: '1.2-2' }}</td>
+          </tr>
+          <tr>
+            <th>Total pagado (registrado)</th>
+            <td class="text-end">{{ resultado.detalle.totalPagado | number: '1.2-2' }}</td>
+          </tr>
+          <tr class="fw-bold">
+            <th>Saldo pendiente</th>
+            <td class="text-end" [class.text-danger]="resultado.saldo > 0">
+              {{ resultado.saldo | number: '1.2-2' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      @if (resultado.pagos.length) {
+        <h6 class="mb-2">Pagos registrados</h6>
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Concepto</th>
+              <th>Mes</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of resultado.pagos; track p.numeroCorrelativo) {
+              <tr>
+                <td>{{ p.numeroCorrelativo }}</td>
+                <td>{{ nombreConcepto(p.concepto) }}</td>
+                <td>{{ p.mes ?? '—' }}</td>
+                <td>{{ p.monto | number: '1.2-2' }}</td>
+                <td>{{ p.fechaPago }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      @if (resultado.puedeGenerarSolvencia) {
+        <div class="alert alert-success mt-3">
+          <i class="bi bi-check-circle me-1"></i>El estudiante está solvente. Puedes generar la constancia.
+        </div>
+        <button class="btn btn-primary" (click)="generarPdf()" [disabled]="generando">
+          <i class="bi bi-file-pdf me-1"></i>Generar solvencia PDF
+        </button>
+      } @else {
+        <div class="alert alert-warning mt-3">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          El estudiante tiene un saldo pendiente de {{ resultado.saldo | number: '1.2-2' }}.
+          No se puede generar la solvencia hasta que se regularice.
+        </div>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="alert alert-info">Busca un estudiante para calcular su solvencia.</div>
+}

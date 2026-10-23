@@ -35,6 +35,7 @@ import { Actividades } from './actividades/actividades';
 import { ActividadForm } from './actividad-form/actividad-form';
 import { Pagos } from './pagos/pagos';
 import { PagoForm } from './pago-form/pago-form';
+import { Solvencias } from './solvencias/solvencias';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -86,6 +87,7 @@ export const routes: Routes = [
       { path: 'pagos', component: Pagos, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
       { path: 'pagos/registrar', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'pagos/registrar/actividad', component: PagoForm, data: { roles: ['Secretaria'] } },
+      { path: 'solvencias', component: Solvencias, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
     ],
   },
   { path: '**', redirectTo: '' },

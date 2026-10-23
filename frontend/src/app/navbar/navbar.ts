@@ -32,6 +32,7 @@ export class Navbar {
     { ruta: '/cuotas', texto: 'Cuotas', roles: ['Super Admin', 'Admin'] },
     { ruta: '/actividades', texto: 'Actividades', roles: ['Super Admin', 'Admin', 'Secretaria'] },
     { ruta: '/pagos', texto: 'Pagos', roles: ['Super Admin', 'Admin', 'Secretaria'] },
+    { ruta: '/solvencias', texto: 'Solvencias', roles: ['Super Admin', 'Admin', 'Secretaria'] },
     { ruta: '/perfil', texto: 'Mi perfil', roles: ['Super Admin', 'Admin', 'Secretaria', 'Maestro', 'Bibliotecario', 'Estudiante'] },
   ];
 

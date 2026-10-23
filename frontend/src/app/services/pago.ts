@@ -91,4 +91,9 @@ export class Pago {
   anular(id: number, motivo: string) {
     return this.http.put<{ mensaje: string }>(`${this.api}/${id}/anular`, { motivo });
   }
+
+  /** Emite el comprobante en PDF y lo descarga en el navegador. */
+  comprobante(id: number) {
+    return this.http.get(`${this.api}/${id}/comprobante`, { responseType: 'blob' });
+  }
 }
