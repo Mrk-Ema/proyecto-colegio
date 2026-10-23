@@ -1,0 +1,64 @@
+<h3>Mis cursos</h3>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroAnio" (change)="cargar()">
+          <option [ngValue]="null">Todos los años</option>
+          @for (a of anios; track a.anio) {
+            <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (!datos.length && !error) {
+  <div class="alert alert-info">No tienes cursos asignados en este ciclo.</div>
+}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Año</th>
+      <th>Nivel</th>
+      <th>Grado</th>
+      <th>Sección</th>
+      <th>Curso</th>
+      <th>Ponderación</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (c of datos; track c.idAsignacion) {
+      <tr>
+        <td>{{ c.anio }}</td>
+        <td>{{ c.nivel }}</td>
+        <td>{{ c.grado }}</td>
+        <td>{{ c.seccion }}</td>
+        <td>{{ c.curso }}</td>
+        <td>
+          <span
+            class="badge"
+            [class.text-bg-success]="c.estadoPonderacion === 'Definida'"
+            [class.text-bg-warning]="c.estadoPonderacion !== 'Definida'"
+            >{{ c.estadoPonderacion }}</span
+          >
+        </td>
+        <td class="text-nowrap">
+          <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/nomina', c.idAsignacion]">
+            <i class="bi bi-people me-1"></i>Nómina
+          </a>
+          <a class="btn btn-sm btn-outline-primary" [routerLink]="['/asistencia', c.idAsignacion]">
+            <i class="bi bi-calendar-check me-1"></i>Asistencia
+          </a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

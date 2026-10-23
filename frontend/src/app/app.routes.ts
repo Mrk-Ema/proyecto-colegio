@@ -30,6 +30,10 @@ import { EmpleadoForm } from './empleado-form/empleado-form';
 import { EmpleadoDetalle } from './empleado-detalle/empleado-detalle';
 import { Inscripciones } from './inscripciones/inscripciones';
 import { InscripcionForm } from './inscripcion-form/inscripcion-form';
+import { MisCursos } from './mis-cursos/mis-cursos';
+import { Nomina } from './nomina/nomina';
+import { AsistenciaTomar } from './asistencia/asistencia';
+import { HistorialAsistencia } from './historial-asistencia/historial-asistencia';
 import { Cuotas } from './cuotas/cuotas';
 import { Actividades } from './actividades/actividades';
 import { ActividadForm } from './actividad-form/actividad-form';
@@ -88,6 +92,10 @@ export const routes: Routes = [
       { path: 'pagos/registrar', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'pagos/registrar/actividad', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'solvencias', component: Solvencias, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'mis-cursos', component: MisCursos, data: { roles: ['Super Admin', 'Maestro'] } },
+      { path: 'nomina/:id', component: Nomina, data: { roles: ['Super Admin', 'Maestro'] } },
+      { path: 'asistencia/:id', component: AsistenciaTomar, data: { roles: ['Super Admin', 'Maestro'] } },
+      { path: 'historial-asistencia/:id', component: HistorialAsistencia, data: { roles: ['Super Admin', 'Maestro'] } },
     ],
   },
   { path: '**', redirectTo: '' },
