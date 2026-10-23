@@ -122,7 +122,25 @@ public class PagoDAO {
     }
 
     /**
-     * ya se pagó esa actividad para esa inscripción?
+     * Suma los pagos Registrados de inscripción y mensualidad de una inscripción.
+     * Las actividades y los pagos Anulados no se cuentan.
+     */
+    public BigDecimal sumarPagosRegistrados(int idInscripcion) throws SQLException {
+        String sql = "SELECT COALESCE(SUM(monto), 0) AS total FROM pago "
+                + "WHERE id_inscripcion = ? AND estado = 'Registrado' "
+                + "AND concepto IN ('Inscripcion', 'Mensualidad')";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idInscripcion);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getBigDecimal("total");
+            }
+        }
+    }
+
+    /**
+     * Ya se pagó esa actividad para esa inscripción?
      */
     public boolean existePagoDeActividad(int idInscripcion, int idActividad) throws SQLException {
         String sql = "SELECT COUNT(*) FROM pago WHERE id_inscripcion = ? AND id_actividad = ? "

@@ -67,6 +67,18 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
         </dependency>
+    <!--  JasperReports para los comprobantes y reportes en PDF  -->
+    <dependency>
+        <groupId>net.sf.jasperreports</groupId>
+        <artifactId>jasperreports</artifactId>
+        <version>6.21.5</version>
+    </dependency>
+    <!--  Groovy, requerido por JasperReports para compilar los .jrxml  -->
+    <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy</artifactId>
+        <version>3.0.22</version>
+    </dependency>
     </dependencies>
     <build>
         <plugins>

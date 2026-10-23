@@ -42,7 +42,7 @@ public class PagoService {
 
     /**
      * Datos que el formulario necesita para cobrar, el estudiante, su inscripción
-     * del año, los montos de su grado y las actividades que le tocan.
+     * del año, los montos de su grado y las actividades que le tocan
      */
     public Map<String, Object> contexto(String carnet, Integer anio) throws Exception {
         Map<String, Object> estudiante = buscarEstudiante(carnet);
@@ -79,7 +79,7 @@ public class PagoService {
         return r;
     }
 
-    /** Registro de un pago de inscripción o de mensualidad. */
+    /** Registro de un pago de inscripción o de mensualidad */
     public Map<String, Object> registrar(Map<String, Object> datos, int idUsuario) throws Exception {
         String concepto = texto(datos.get("concepto"));
         if (!CONCEPTO_INSCRIPCION.equals(concepto) && !CONCEPTO_MENSUALIDAD.equals(concepto)) {
@@ -122,7 +122,7 @@ public class PagoService {
         return guardar(idInscripcion, null, concepto, mes, monto, idUsuario);
     }
 
-    /** Registro del pago de una actividad extracurricular. */
+    /** Registro del pago de una actividad extracurricular */
     public Map<String, Object> registrarActividad(Map<String, Object> datos, int idUsuario)
             throws Exception {
         Integer idActividad = enteroONulo(datos.get("idActividad"));
@@ -157,7 +157,7 @@ public class PagoService {
         return guardar(idInscripcion, idActividad, CONCEPTO_ACTIVIDAD, null, costo, idUsuario);
     }
 
-    /** Listado de los pagos de un estudiante, con filtros opcionales. */
+    /** Listado de los pagos de un estudiante, con filtros opcionales */
     public Map<String, Object> listar(String carnet, Integer idEstudiante, String concepto,
             String estado, String desde, String hasta, int page, int size) throws Exception {
         if ((carnet == null || carnet.isBlank()) && idEstudiante == null) {
@@ -189,7 +189,7 @@ public class PagoService {
         return r;
     }
 
-    /** Anulación, el registro y su número correlativo se conservan. */
+    /** Anulacion, el registro y su número correlativo se conservan */
     public void anular(int idPago, String motivo, int idUsuario) throws Exception {
         Map<String, Object> pago = dao.buscarPorId(idPago);
         if (pago == null) {
@@ -211,6 +211,60 @@ public class PagoService {
             throw new NotFoundException("Pago no encontrado");
         }
         return pago;
+    }
+
+    /** Genera el PDF del comprobante con JasperReports */
+    public byte[] generarComprobante(int idPago) throws Exception {
+        Map<String, Object> pago = obtener(idPago);
+        if (!"Registrado".equals(pago.get("estado"))) {
+            throw new IllegalArgumentException("El pago está Anulado, no se puede emitir el comprobante");
+        }
+        String concepto = String.valueOf(pago.get("concepto"));
+        if (concepto.equals(CONCEPTO_INSCRIPCION)) {
+            concepto = "Inscripción";
+        } else if (concepto.equals(CONCEPTO_MENSUALIDAD)) {
+            concepto = "Mensualidad";
+        } else if (concepto.equals(CONCEPTO_ACTIVIDAD)) {
+            concepto = "Actividad extracurricular";
+        }
+        String mes = (String) pago.get("mes");
+        if (mes == null) {
+            mes = "-";
+        }
+        java.math.BigDecimal monto = (java.math.BigDecimal) pago.get("monto");
+        String montoTexto = "$ " + monto.toPlainString();
+        String fecha = String.valueOf(pago.get("fechaPago"));
+        String anio = String.valueOf(pago.get("anio"));
+        String estudiante = pago.get("nombres") + " " + pago.get("apellidos");
+        String carnet = String.valueOf(pago.get("carnet"));
+        String grado = String.valueOf(pago.get("grado"));
+        String seccion = String.valueOf(pago.get("seccion"));
+        String registra = String.valueOf(pago.get("registraCorreo"));
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("numeroCorrelativo", String.valueOf(pago.get("numeroCorrelativo")));
+        params.put("fechaPago", fecha);
+        params.put("carnet", carnet);
+        params.put("estudiante", estudiante);
+        params.put("grado", grado);
+        params.put("seccion", seccion);
+        params.put("anio", anio);
+        params.put("concepto", concepto);
+        params.put("mes", mes);
+        params.put("monto", montoTexto);
+        params.put("registra", registra);
+
+        try (java.io.InputStream in = getClass().getResourceAsStream("/comprobantes/comprobante.jrxml")) {
+            if (in == null) {
+                throw new IllegalStateException("No se encontró el reporte comprobante.jrxml");
+            }
+            net.sf.jasperreports.engine.JasperReport jasperReport =
+                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(in);
+            net.sf.jasperreports.engine.JasperPrint print =
+                    net.sf.jasperreports.engine.JasperFillManager.fillReport(
+                            jasperReport, params, new net.sf.jasperreports.engine.JREmptyDataSource(1));
+            return net.sf.jasperreports.engine.JasperExportManager.exportReportToPdf(print);
+        }
     }
 
     private Map<String, Object> guardar(int idInscripcion, Integer idActividad, String concepto,

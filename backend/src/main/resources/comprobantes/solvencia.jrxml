@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="solvencia"
+              language="java"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="555"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+    <parameter name="carnet" class="java.lang.String"/>
+    <parameter name="estudiante" class="java.lang.String"/>
+    <parameter name="grado" class="java.lang.String"/>
+    <parameter name="seccion" class="java.lang.String"/>
+    <parameter name="anio" class="java.lang.String"/>
+    <parameter name="fechaEmision" class="java.lang.String"/>
+
+    <title>
+        <band height="70">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="30"/>
+                <textElement textAlignment="Center"><font size="18" isBold="true"/></textElement>
+                <text><![CDATA[COLEGIO - CONSTANCIA DE SOLVENCIA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="35" width="555" height="30"/>
+                <textElement textAlignment="Center"><font size="11"/></textElement>
+                <text><![CDATA[Se hace constar que el estudiante no tiene saldos pendientes en el año lectivo indicado.]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <detail>
+        <band height="200">
+            <staticText><reportElement x="0" y="10" width="160" height="18"/><text><![CDATA[Carnet:]]></text></staticText>
+            <textField><reportElement x="170" y="10" width="385" height="18"/><textFieldExpression><![CDATA[$P{carnet}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="30" width="160" height="18"/><text><![CDATA[Estudiante:]]></text></staticText>
+            <textField><reportElement x="170" y="30" width="385" height="18"/><textFieldExpression><![CDATA[$P{estudiante}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="50" width="160" height="18"/><text><![CDATA[Grado:]]></text></staticText>
+            <textField><reportElement x="170" y="50" width="385" height="18"/><textFieldExpression><![CDATA[$P{grado}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="70" width="160" height="18"/><text><![CDATA[Sección:]]></text></staticText>
+            <textField><reportElement x="170" y="70" width="385" height="18"/><textFieldExpression><![CDATA[$P{seccion}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="90" width="160" height="18"/><text><![CDATA[Año lectivo:]]></text></staticText>
+            <textField><reportElement x="170" y="90" width="385" height="18"/><textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="110" width="160" height="18"/><text><![CDATA[Fecha de emisión:]]></text></staticText>
+            <textField><reportElement x="170" y="110" width="385" height="18"/><textFieldExpression><![CDATA[$P{fechaEmision}]]></textFieldExpression></textField>
+
+            <staticText>
+                <reportElement x="0" y="140" width="555" height="40"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[El estudiante se encuentra solvente en el año lectivo indicado.]]></text>
+            </staticText>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="40">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="20"/>
+                <textElement textAlignment="Center"><font size="9" isItalic="true"/></textElement>
+                <text><![CDATA[Documento generado automáticamente. Valide la solvencia con el número de inscripción.]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>

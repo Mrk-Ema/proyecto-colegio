@@ -81,6 +81,35 @@ public class PagoResource {
     }
 
     @GET
+    @Path("{id}/comprobante")
+    public Response comprobante(@PathParam("id") int id, @Context ContainerRequestContext req) {
+        if (!esSecretariaOAdmin(req)) {
+            return prohibido();
+        }
+        try {
+            byte[] pdf = servicio.generarComprobante(id);
+            return Response.ok(pdf)
+                    .type("application/pdf")
+                    .header("Content-Disposition", "inline; filename=\"comprobante-" + id + ".pdf\"")
+                    .build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .type(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
+                    .entity(Map.of("error", e.getMessage())).build();
+        } catch (jakarta.ws.rs.NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .type(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
+                    .entity(Map.of("error", e.getMessage())).build();
+        } catch (Exception e) {
+            System.out.println("Error al generar el comprobante");
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .type(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
+                    .entity(Map.of("error", "Error interno")).build();
+        }
+    }
+
+    @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response obtener(@PathParam("id") int id, @Context ContainerRequestContext req) {

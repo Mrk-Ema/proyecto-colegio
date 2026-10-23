@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="comprobante"
+              language="java"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="555"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+    <parameter name="numeroCorrelativo" class="java.lang.String"/>
+    <parameter name="fechaPago" class="java.lang.String"/>
+    <parameter name="carnet" class="java.lang.String"/>
+    <parameter name="estudiante" class="java.lang.String"/>
+    <parameter name="grado" class="java.lang.String"/>
+    <parameter name="seccion" class="java.lang.String"/>
+    <parameter name="anio" class="java.lang.String"/>
+    <parameter name="concepto" class="java.lang.String"/>
+    <parameter name="mes" class="java.lang.String"/>
+    <parameter name="monto" class="java.lang.String"/>
+    <parameter name="registra" class="java.lang.String"/>
+
+    <title>
+        <band height="60">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="30"/>
+                <textElement textAlignment="Center">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[COLEGIO - COMPROBANTE DE PAGO]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="35" width="555" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="11"/>
+                </textElement>
+                <text><![CDATA[Comprobante emitido por el sistema de administración escolar]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <detail>
+        <band height="260">
+            <staticText>
+                <reportElement x="0" y="5" width="555" height="20"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Datos del pago]]></text>
+            </staticText>
+
+            <staticText><reportElement x="0" y="30" width="160" height="18"/><text><![CDATA[Número correlativo:]]></text></staticText>
+            <textField><reportElement x="170" y="30" width="385" height="18"/><textFieldExpression><![CDATA[$P{numeroCorrelativo}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="50" width="160" height="18"/><text><![CDATA[Fecha de pago:]]></text></staticText>
+            <textField><reportElement x="170" y="50" width="385" height="18"/><textFieldExpression><![CDATA[$P{fechaPago}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="70" width="160" height="18"/><text><![CDATA[Concepto:]]></text></staticText>
+            <textField><reportElement x="170" y="70" width="385" height="18"/><textFieldExpression><![CDATA[$P{concepto}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="90" width="160" height="18"/><text><![CDATA[Mes (mensualidad):]]></text></staticText>
+            <textField><reportElement x="170" y="90" width="385" height="18"/><textFieldExpression><![CDATA[$P{mes} == null ? "-" : $P{mes}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="110" width="160" height="18"/><text><![CDATA[Monto:]]></text></staticText>
+            <textField><reportElement x="170" y="110" width="385" height="18"/><textFieldExpression><![CDATA[$P{monto}]]></textFieldExpression></textField>
+
+            <staticText>
+                <reportElement x="0" y="140" width="555" height="20"/>
+                <textElement><font size="12" isBold="true"/></textElement>
+                <text><![CDATA[Datos del estudiante]]></text>
+            </staticText>
+
+            <staticText><reportElement x="0" y="165" width="160" height="18"/><text><![CDATA[Carnet:]]></text></staticText>
+            <textField><reportElement x="170" y="165" width="385" height="18"/><textFieldExpression><![CDATA[$P{carnet}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="185" width="160" height="18"/><text><![CDATA[Estudiante:]]></text></staticText>
+            <textField><reportElement x="170" y="185" width="385" height="18"/><textFieldExpression><![CDATA[$P{estudiante}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="205" width="160" height="18"/><text><![CDATA[Año lectivo:]]></text></staticText>
+            <textField><reportElement x="170" y="205" width="385" height="18"/><textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="225" width="160" height="18"/><text><![CDATA[Grado / Sección:]]></text></staticText>
+            <textField><reportElement x="170" y="225" width="385" height="18"/><textFieldExpression><![CDATA[$P{grado} + " / " + $P{seccion}]]></textFieldExpression></textField>
+
+            <staticText><reportElement x="0" y="245" width="555" height="15"/><text><![CDATA[Registrado por:]]></text></staticText>
+            <textField><reportElement x="170" y="245" width="385" height="15"/><textFieldExpression><![CDATA[$P{registra}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="30">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="9" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Este comprobante se genera automáticamente. El número correlativo es único.]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>
