@@ -32,6 +32,8 @@ import { Inscripciones } from './inscripciones/inscripciones';
 import { InscripcionForm } from './inscripcion-form/inscripcion-form';
 import { MisCursos } from './mis-cursos/mis-cursos';
 import { Nomina } from './nomina/nomina';
+import { PonderacionComponent } from './ponderacion/ponderacion';
+import { Notas } from './notas/notas';
 import { AsistenciaTomar } from './asistencia/asistencia';
 import { HistorialAsistencia } from './historial-asistencia/historial-asistencia';
 import { Cuotas } from './cuotas/cuotas';
@@ -96,6 +98,8 @@ export const routes: Routes = [
       { path: 'nomina/:id', component: Nomina, data: { roles: ['Super Admin', 'Maestro'] } },
       { path: 'asistencia/:id', component: AsistenciaTomar, data: { roles: ['Super Admin', 'Maestro'] } },
       { path: 'historial-asistencia/:id', component: HistorialAsistencia, data: { roles: ['Super Admin', 'Maestro'] } },
+      { path: 'ponderacion/:id', component: PonderacionComponent, data: { roles: ['Super Admin', 'Maestro'] } },
+      { path: 'notas/:id', component: Notas, data: { roles: ['Super Admin', 'Maestro'] } },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -1,0 +1,133 @@
+<h3>Notas del curso</h3>
+<a class="btn btn-outline-secondary btn-sm mb-3" routerLink="/mis-cursos">
+  <i class="bi bi-arrow-left me-1"></i>Volver a mis cursos
+</a>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+
+@if (!datos) {
+  <div class="alert alert-info">Cargando...</div>
+} @else if (!datos.actividades.length) {
+  <div class="alert alert-warning">
+    Este curso no tiene ponderación definida. Define la ponderación primero para poder ingresar notas.
+    <a class="btn btn-outline-primary btn-sm ms-2" [routerLink]="['/ponderacion', idAsignacion]">Ir a ponderación</a>
+  </div>
+} @else {
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-primary btn-sm" (click)="prepararIngreso(datos.actividades[0].idActividadEvaluable)">
+          <i class="bi bi-pencil-square me-1"></i>Ingresar notas
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="irAPonderacion()">
+          <i class="bi bi-gear me-1"></i>Ponderación
+        </button>
+      </div>
+
+      @if (actividadSeleccionada != null) {
+        <div class="card border-primary mb-3">
+          <div class="card-body">
+            <h6 class="mb-2">
+              Ingresar notas: {{ actividadActual()?.nombre }}
+              (máximo {{ actividadActual()?.puntos }} puntos)
+            </h6>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Carnet</th>
+                  <th>Nombre</th>
+                  <th style="width: 120px">Nota</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (e of datos.estudiantes; track e.idInscripcion) {
+                  <tr>
+                    <td>{{ e.carnet }}</td>
+                    <td>{{ e.nombres }} {{ e.apellidos }}</td>
+                    <td>
+                      <input
+                        class="form-control form-control-sm"
+                        type="number"
+                        min="0"
+                        [max]="actividadActual()?.puntos"
+                        step="0.01"
+                        [(ngModel)]="notasEdicion[e.idInscripcion]"
+                      />
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <div class="d-flex gap-2 mt-2">
+              <button class="btn btn-primary btn-sm" (click)="ingresarNotas()" [disabled]="guardando">
+                <i class="bi bi-save me-1"></i>Guardar
+              </button>
+              <button class="btn btn-outline-secondary btn-sm" (click)="cancelarIngreso()">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (modificandoId != null) {
+        <div class="card border-warning mb-3">
+          <div class="card-body py-2">
+            <div class="row g-2 align-items-end">
+              <div class="col-auto">
+                <label class="form-label mb-0">Nueva nota</label>
+                <input class="form-control form-control-sm" type="number" min="0" step="0.01" [(ngModel)]="nuevoValor" />
+              </div>
+              <div class="col-auto">
+                <button class="btn btn-primary btn-sm" (click)="guardarModificacion()" [disabled]="guardando">Guardar</button>
+                <button class="btn btn-outline-secondary btn-sm ms-1" (click)="cancelarModificacion()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="table-responsive">
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Carnet</th>
+              <th>Nombre</th>
+              @for (a of datos.actividades; track a.idActividadEvaluable) {
+                <th class="text-center">{{ a.nombre }} ({{ a.puntos }})</th>
+              }
+              <th class="text-center">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of datos.estudiantes; track e.idInscripcion) {
+              <tr>
+                <td>{{ e.carnet }}</td>
+                <td>{{ e.nombres }} {{ e.apellidos }}</td>
+                @for (a of datos.actividades; track a.idActividadEvaluable) {
+                  <td class="text-center">
+                    @if (valorNota(e, a.idActividadEvaluable) != null) {
+                      <span
+                        class="badge text-bg-light border"
+                        style="cursor: pointer"
+                        (click)="iniciarModificacion(idNota(e, a.idActividadEvaluable)!, valorNota(e, a.idActividadEvaluable))"
+                      >
+                        {{ valorNota(e, a.idActividadEvaluable) | number: '1.2-2' }}
+                      </span>
+                    } @else {
+                      <span class="text-muted">—</span>
+                    }
+                  </td>
+                }
+                <td class="text-center fw-bold">{{ totalEstudiante(e) | number: '1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

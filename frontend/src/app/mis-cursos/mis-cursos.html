@@ -54,8 +54,14 @@
           <a class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/nomina', c.idAsignacion]">
             <i class="bi bi-people me-1"></i>Nómina
           </a>
-          <a class="btn btn-sm btn-outline-primary" [routerLink]="['/asistencia', c.idAsignacion]">
+          <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/asistencia', c.idAsignacion]">
             <i class="bi bi-calendar-check me-1"></i>Asistencia
+          </a>
+          <a class="btn btn-sm btn-outline-warning me-1" [routerLink]="['/ponderacion', c.idAsignacion]">
+            <i class="bi bi-sliders me-1"></i>Ponderación
+          </a>
+          <a class="btn btn-sm btn-outline-info" [routerLink]="['/notas', c.idAsignacion]">
+            <i class="bi bi-journal-text me-1"></i>Notas
           </a>
         </td>
       </tr>
