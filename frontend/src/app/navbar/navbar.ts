@@ -33,6 +33,10 @@ export class Navbar {
     { ruta: '/actividades', texto: 'Actividades', roles: ['Super Admin', 'Admin', 'Secretaria'] },
     { ruta: '/pagos', texto: 'Pagos', roles: ['Super Admin', 'Admin', 'Secretaria'] },
     { ruta: '/solvencias', texto: 'Solvencias', roles: ['Super Admin', 'Admin', 'Secretaria'] },
+    { ruta: '/libros', texto: 'Libros', roles: ['Super Admin', 'Bibliotecario', 'Estudiante'] },
+    { ruta: '/parametros-biblioteca', texto: 'Parámetros biblioteca', roles: ['Super Admin', 'Bibliotecario'] },
+    { ruta: '/prestamos', texto: 'Préstamos', roles: ['Super Admin', 'Bibliotecario'] },
+    { ruta: '/multas', texto: 'Multas', roles: ['Super Admin', 'Bibliotecario'] },
     { ruta: '/mis-cursos', texto: 'Mis cursos', roles: ['Super Admin', 'Maestro'] },
     { ruta: '/perfil', texto: 'Mi perfil', roles: ['Super Admin', 'Admin', 'Secretaria', 'Maestro', 'Bibliotecario', 'Estudiante'] },
   ];

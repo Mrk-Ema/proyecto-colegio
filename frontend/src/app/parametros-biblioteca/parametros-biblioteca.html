@@ -1,0 +1,28 @@
+<h3>Parámetros de biblioteca</h3>
+<div class="alert alert-info">
+  Configura los días de préstamo y la multa por día. Aplica solo a préstamos posteriores.
+</div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body" style="max-width: 480px">
+    <div class="mb-2">
+      <label class="form-label">Días de préstamo *</label>
+      <input class="form-control" [(ngModel)]="diasPrestamo" type="number" min="1" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Multa por día *</label>
+      <input class="form-control" [(ngModel)]="multaPorDia" type="number" min="0" step="0.01" />
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary me-2" (click)="guardar()" [disabled]="guardando">
+        <i class="bi bi-save me-1"></i>Guardar
+      </button>
+    </div>
+  </div>
+</div>

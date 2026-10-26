@@ -1,0 +1,33 @@
+@if (esEditar) {
+  <h3>Modificar libro</h3>
+} @else {
+  <h3>Nuevo libro</h3>
+}
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body" style="max-width: 560px">
+    <div class="mb-2">
+      <label class="form-label">Título *</label>
+      <input class="form-control" [(ngModel)]="titulo" maxlength="200" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Autor</label>
+      <input class="form-control" [(ngModel)]="autor" maxlength="150" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Editorial</label>
+      <input class="form-control" [(ngModel)]="editorial" maxlength="150" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Cantidad *</label>
+      <input class="form-control" [(ngModel)]="cantidad" type="number" min="1" />
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary me-2" (click)="guardar()">Guardar</button>
+      <a class="btn btn-outline-secondary" routerLink="/libros">Volver</a>
+    </div>
+  </div>
+</div>

@@ -42,6 +42,12 @@ import { ActividadForm } from './actividad-form/actividad-form';
 import { Pagos } from './pagos/pagos';
 import { PagoForm } from './pago-form/pago-form';
 import { Solvencias } from './solvencias/solvencias';
+import { Libros } from './libros/libros';
+import { LibroForm } from './libro-form/libro-form';
+import { ParametrosBiblioteca } from './parametros-biblioteca/parametros-biblioteca';
+import { Prestamos } from './prestamos/prestamos';
+import { PrestamoForm } from './prestamo-form/prestamo-form';
+import { Multas } from './multas/multas';
 import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
@@ -94,6 +100,13 @@ export const routes: Routes = [
       { path: 'pagos/registrar', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'pagos/registrar/actividad', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'solvencias', component: Solvencias, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'libros', component: Libros, data: { roles: ['Super Admin', 'Bibliotecario', 'Estudiante'] } },
+      { path: 'libros/nuevo', component: LibroForm, data: { roles: ['Super Admin', 'Bibliotecario'] } },
+      { path: 'libros/:id/editar', component: LibroForm, data: { roles: ['Super Admin', 'Bibliotecario'] } },
+      { path: 'parametros-biblioteca', component: ParametrosBiblioteca, data: { roles: ['Super Admin', 'Bibliotecario'] } },
+      { path: 'prestamos', component: Prestamos, data: { roles: ['Super Admin', 'Bibliotecario'] } },
+      { path: 'prestamos/nuevo', component: PrestamoForm, data: { roles: ['Super Admin', 'Bibliotecario'] } },
+      { path: 'multas', component: Multas, data: { roles: ['Super Admin', 'Bibliotecario'] } },
       { path: 'mis-cursos', component: MisCursos, data: { roles: ['Super Admin', 'Maestro'] } },
       { path: 'nomina/:id', component: Nomina, data: { roles: ['Super Admin', 'Maestro'] } },
       { path: 'asistencia/:id', component: AsistenciaTomar, data: { roles: ['Super Admin', 'Maestro'] } },

@@ -1,0 +1,43 @@
+<h3>Nuevo préstamo</h3>
+<div class="alert alert-info">
+  El libro debe estar Activo y con ejemplares disponibles. La fecha esperada se calcula con los
+  parámetros de biblioteca.
+</div>
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body" style="max-width: 560px">
+    <div class="mb-3">
+      <label class="form-label">Libro *</label>
+      <select class="form-select" [(ngModel)]="idLibro">
+        <option [ngValue]="null">Seleccione</option>
+        @for (l of libros; track l.idLibro) {
+          <option [ngValue]="l.idLibro">{{ l.titulo }} ({{ l.cantidadDisponible }} disponibles)</option>
+        }
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Tipo de prestatario *</label>
+      <select class="form-select" [(ngModel)]="tipoPrestatario">
+        <option value="estudiante">Estudiante</option>
+        <option value="maestro">Maestro</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">ID del prestatario *</label>
+      <input class="form-control" [(ngModel)]="idPrestatario" type="number" min="1" />
+      <div class="form-text">ID del estudiante o del empleado (maestro).</div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary me-2" (click)="guardar()" [disabled]="guardando">
+        <i class="bi bi-save me-1"></i>Registrar préstamo
+      </button>
+      <a class="btn btn-outline-secondary" routerLink="/prestamos">Volver</a>
+    </div>
+  </div>
+</div>

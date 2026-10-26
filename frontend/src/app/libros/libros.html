@@ -1,0 +1,95 @@
+<h3>Libros</h3>
+@if (puedeEditar()) {
+  <a class="btn btn-primary btn-sm mb-3" routerLink="/libros/nuevo">
+    <i class="bi bi-plus-lg me-1"></i>Nuevo libro
+  </a>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <input class="form-control" placeholder="Título" [(ngModel)]="filtroTitulo" />
+      </div>
+      <div class="col">
+        <input class="form-control" placeholder="Autor" [(ngModel)]="filtroAutor" />
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroEstado">
+          <option value="">Todos</option>
+          <option value="Activo">Activo</option>
+          <option value="Inactivo">Inactivo</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary" (click)="filtrar()">
+          <i class="bi bi-search me-1"></i>Filtrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (!datos.length && !error) {
+  <div class="alert alert-info">No hay libros con esos filtros.</div>
+}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Autor</th>
+      <th>Editorial</th>
+      <th class="text-center">Cantidad</th>
+      <th class="text-center">Disponibles</th>
+      <th>Estado</th>
+      @if (puedeEditar()) {
+        <th></th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (f of datos; track f.idLibro) {
+      <tr>
+        <td>{{ f.titulo }}</td>
+        <td>{{ f.autor ?? '—' }}</td>
+        <td>{{ f.editorial ?? '—' }}</td>
+        <td class="text-center">{{ f.cantidadTotal }}</td>
+        <td class="text-center">{{ f.cantidadDisponible }}</td>
+        <td>
+          <span
+            class="badge"
+            [class.text-bg-success]="f.estado === 'Activo'"
+            [class.text-bg-secondary]="f.estado === 'Inactivo'"
+            >{{ f.estado }}</span
+          >
+        </td>
+        @if (puedeEditar()) {
+          <td class="text-nowrap">
+            <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/libros', f.idLibro, 'editar']">
+              <i class="bi bi-pencil me-1"></i>Modificar
+            </a>
+            @if (f.estado === 'Activo') {
+              <button class="btn btn-sm btn-outline-danger" (click)="desactivar(f)">
+                <i class="bi bi-slash-circle me-1"></i>Desactivar
+              </button>
+            } @else {
+              <button class="btn btn-sm btn-outline-success" (click)="activar(f)">
+                <i class="bi bi-check-circle me-1"></i>Activar
+              </button>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>

@@ -1,0 +1,106 @@
+<h3>Préstamos</h3>
+@if (puedeEditar()) {
+  <a class="btn btn-primary btn-sm mb-3" routerLink="/prestamos/nuevo">
+    <i class="bi bi-plus-lg me-1"></i>Nuevo préstamo
+  </a>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <input class="form-control" type="number" placeholder="ID del libro" [(ngModel)]="filtroLibro" />
+      </div>
+      <div class="col">
+        <input class="form-control" type="number" placeholder="ID del prestatario" [(ngModel)]="filtroPrestatario" />
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroTipo">
+          <option value="">Todos los tipos</option>
+          <option value="estudiante">Estudiante</option>
+          <option value="maestro">Maestro</option>
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroEstado">
+          <option value="">Todos</option>
+          <option value="Activo">Activo</option>
+          <option value="Devuelto">Devuelto</option>
+        </select>
+      </div>
+      <div class="col">
+        <input class="form-control" type="date" [(ngModel)]="filtroDesde" />
+      </div>
+      <div class="col">
+        <input class="form-control" type="date" [(ngModel)]="filtroHasta" />
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary" (click)="filtrar()">
+          <i class="bi bi-search me-1"></i>Filtrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+@if (!datos.length && !error) {
+  <div class="alert alert-info">No hay préstamos con esos filtros.</div>
+}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Libro</th>
+      <th>Prestatario</th>
+      <th>Tipo</th>
+      <th>Préstamo</th>
+      <th>Esperada</th>
+      <th>Devolución</th>
+      <th>Estado</th>
+      @if (puedeEditar()) {
+        <th></th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (f of datos; track f.idPrestamo) {
+      <tr>
+        <td>{{ f.libro }}</td>
+        <td>{{ f.prestatario }}</td>
+        <td>{{ f.tipoPrestatario }}</td>
+        <td>{{ f.fechaPrestamo }}</td>
+        <td>{{ f.fechaEsperada }}</td>
+        <td>{{ f.fechaDevolucion ?? '—' }}</td>
+        <td>
+          <span
+            class="badge"
+            [class.text-bg-success]="f.estado === 'Activo'"
+            [class.text-bg-secondary]="f.estado === 'Devuelto'"
+            >{{ f.estado }}</span
+          >
+        </td>
+        @if (puedeEditar()) {
+          <td class="text-nowrap">
+            @if (f.estado === 'Activo') {
+              <button class="btn btn-sm btn-outline-danger" (click)="devolver(f)">
+                <i class="bi bi-arrow-return-left me-1"></i>Devolver
+              </button>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>
