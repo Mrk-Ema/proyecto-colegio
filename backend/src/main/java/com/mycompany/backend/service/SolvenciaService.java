@@ -33,7 +33,7 @@ public class SolvenciaService {
     public Map<String, Object> contexto(String carnet) throws Exception {
         Map<String, Object> estudiante = buscarEstudiante(carnet);
         if (estudiante == null) {
-            throw new IllegalArgumentException("No se encontró ningún estudiante con ese carné");
+            throw new IllegalArgumentException("No se encontró ningún estudiante con ese carnet");
         }
         int idEstudiante = (Integer) estudiante.get("idEstudiante");
         List<Integer> anios = new ArrayList<>();
@@ -58,7 +58,7 @@ public class SolvenciaService {
     public Map<String, Object> calcular(String carnet, Integer anio) throws Exception {
         Map<String, Object> estudiante = buscarEstudiante(carnet);
         if (estudiante == null) {
-            throw new IllegalArgumentException("No se encontró ningún estudiante con ese carné");
+            throw new IllegalArgumentException("No se encontró ningún estudiante con ese carnet");
         }
         if (!"Activo".equals(estudiante.get("estado"))) {
             throw new IllegalArgumentException("El estudiante no está Activo");

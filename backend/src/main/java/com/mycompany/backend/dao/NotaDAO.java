@@ -187,4 +187,47 @@ public class NotaDAO {
             }
         }
     }
+
+    /**
+     * Notas de un estudiante en un año, con actividad, curso, grado y sección.
+     * Para las consultas del estudiante (solo lectura de sus propios datos).
+     */
+    public List<Map<String, Object>> listarPorEstudianteYAnio(int idEstudiante, int anio) throws SQLException {
+        String sql = "SELECT n.id_nota, n.valor, n.fecha_registro, "
+                + "ae.id_actividad_evaluable, ae.nombre AS actividad, ae.puntos, "
+                + "am.id_asignacion, c.nombre AS curso, g.nombre AS grado, s.nombre AS seccion, "
+                + "am.id_año_lectivo AS anio "
+                + "FROM nota n "
+                + "JOIN actividad_evaluable ae ON ae.id_actividad_evaluable = n.id_actividad_evaluable "
+                + "JOIN asignacion_maestro am ON am.id_asignacion = ae.id_asignacion "
+                + "JOIN seccion s ON s.id_seccion = am.id_seccion "
+                + "JOIN grado g ON g.id_grado = s.id_grado "
+                + "JOIN curso c ON c.id_curso = am.id_curso "
+                + "JOIN inscripcion i ON i.id_inscripcion = n.id_inscripcion "
+                + "WHERE i.id_estudiante = ? AND i.id_año_lectivo = ? "
+                + "ORDER BY c.nombre, ae.nombre";
+        Connection cn = Conexion.obtener();
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idEstudiante);
+            ps.setInt(2, anio);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Map<String, Object>> l = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("idNota", rs.getInt("id_nota"));
+                    m.put("valor", rs.getBigDecimal("valor"));
+                    m.put("idActividadEvaluable", rs.getInt("id_actividad_evaluable"));
+                    m.put("actividad", rs.getString("actividad"));
+                    m.put("puntos", rs.getBigDecimal("puntos"));
+                    m.put("idAsignacion", rs.getInt("id_asignacion"));
+                    m.put("curso", rs.getString("curso"));
+                    m.put("grado", rs.getString("grado"));
+                    m.put("seccion", rs.getString("seccion"));
+                    m.put("anio", rs.getInt("anio"));
+                    l.add(m);
+                }
+                return l;
+            }
+        }
+    }
 }
