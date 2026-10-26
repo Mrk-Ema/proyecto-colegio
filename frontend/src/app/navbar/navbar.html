@@ -1,15 +1,56 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-<!--class="navbar navbar-expand-lg navbar-dark bg-primary"> -->
   <div class="container-fluid">
-    <span class="navbar-brand">Colegio Mrk</span>
-    <div class="navbar-nav me-auto">
-      @for (op of menu; track op.ruta) {
-        @if (visible(op)) {
-          <a class="nav-link" [routerLink]="op.ruta">{{ op.texto }}</a>
+    <span class="navbar-brand me-2">Colegio Mrk</span>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        @for (grupo of menu; track grupo.etiqueta) {
+          @if (grupoVisible(grupo)) {
+            @if (esDropdown(grupo)) {
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {{ grupo.etiqueta }}
+                </a>
+                <ul class="dropdown-menu">
+                  @for (item of grupo.items; track item.ruta) {
+                    @if (visible(item)) {
+                      <li>
+                        <a class="dropdown-item" [routerLink]="item.ruta" data-bs-dismiss="dropdown">
+                          {{ item.texto }}
+                        </a>
+                      </li>
+                    }
+                  }
+                </ul>
+              </li>
+            } @else {
+              <li class="nav-item">
+                <a class="nav-link" [routerLink]="primerVisible(grupo).ruta">
+                  {{ primerVisible(grupo).texto }}
+                </a>
+              </li>
+            }
+          }
         }
-      }
+      </ul>
+      <span class="navbar-text me-3 small">{{ rol }}</span>
+      <button class="btn btn-outline-light btn-sm" (click)="salir()">Salir</button>
     </div>
-    <span class="navbar-text me-3">{{ rol }}</span>
-    <button class="btn btn-outline-light btn-sm" (click)="salir()">Salir</button>
   </div>
 </nav>

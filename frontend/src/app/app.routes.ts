@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Login } from './login/login';
 import { Inicio } from './inicio/inicio';
-import { Usuarios } from './usuarios/usuarios';
 import { Layout } from './layout/layout';
 import { Perfil } from './perfil/perfil';
 import { PerfilEditar } from './perfil-editar/perfil-editar';
@@ -42,6 +41,10 @@ import { ActividadForm } from './actividad-form/actividad-form';
 import { Pagos } from './pagos/pagos';
 import { PagoForm } from './pago-form/pago-form';
 import { Solvencias } from './solvencias/solvencias';
+import { MisNotas } from './mis-notas/mis-notas';
+import { MiEstadoCuenta } from './mi-estado-cuenta/mi-estado-cuenta';
+import { MisPrestamos } from './mis-prestamos/mis-prestamos';
+import { MisMultas } from './mis-multas/mis-multas';
 import { Libros } from './libros/libros';
 import { LibroForm } from './libro-form/libro-form';
 import { ParametrosBiblioteca } from './parametros-biblioteca/parametros-biblioteca';
@@ -60,7 +63,7 @@ export const routes: Routes = [
       { path: 'perfil', component: Perfil },
       { path: 'perfil/editar', component: PerfilEditar },
       { path: 'cambio-password', component: CambioPassword },
-      { path: 'usuarios', component: Usuarios, data: { roles: ['Super Admin', 'Admin'] } },
+      // (ruta usuarios eliminada: no tiene CU asignado)
       { path: 'anios', component: Anios, data: { roles: ['Super Admin'] } },
       { path: 'anios/nuevo', component: AnioForm, data: { roles: ['Super Admin'] } },
       { path: 'anios/:anio/editar', component: AnioForm, data: { roles: ['Super Admin'] } },
@@ -100,14 +103,18 @@ export const routes: Routes = [
       { path: 'pagos/registrar', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'pagos/registrar/actividad', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'solvencias', component: Solvencias, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
-      { path: 'libros', component: Libros, data: { roles: ['Super Admin', 'Bibliotecario', 'Estudiante'] } },
-      { path: 'libros/nuevo', component: LibroForm, data: { roles: ['Super Admin', 'Bibliotecario'] } },
-      { path: 'libros/:id/editar', component: LibroForm, data: { roles: ['Super Admin', 'Bibliotecario'] } },
-      { path: 'parametros-biblioteca', component: ParametrosBiblioteca, data: { roles: ['Super Admin', 'Bibliotecario'] } },
-      { path: 'prestamos', component: Prestamos, data: { roles: ['Super Admin', 'Bibliotecario'] } },
-      { path: 'prestamos/nuevo', component: PrestamoForm, data: { roles: ['Super Admin', 'Bibliotecario'] } },
-      { path: 'multas', component: Multas, data: { roles: ['Super Admin', 'Bibliotecario'] } },
-      { path: 'mis-cursos', component: MisCursos, data: { roles: ['Super Admin', 'Maestro'] } },
+      { path: 'mis-notas', component: MisNotas, data: { roles: ['Estudiante'] } },
+      { path: 'mi-estado-cuenta', component: MiEstadoCuenta, data: { roles: ['Estudiante'] } },
+      { path: 'mis-prestamos', component: MisPrestamos, data: { roles: ['Estudiante'] } },
+      { path: 'mis-multas', component: MisMultas, data: { roles: ['Estudiante'] } },
+      { path: 'libros', component: Libros, data: { roles: ['Bibliotecario', 'Estudiante'] } },
+      { path: 'libros/nuevo', component: LibroForm, data: { roles: ['Bibliotecario'] } },
+      { path: 'libros/:id/editar', component: LibroForm, data: { roles: ['Bibliotecario'] } },
+      { path: 'parametros-biblioteca', component: ParametrosBiblioteca, data: { roles: ['Bibliotecario'] } },
+      { path: 'prestamos', component: Prestamos, data: { roles: ['Bibliotecario'] } },
+      { path: 'prestamos/nuevo', component: PrestamoForm, data: { roles: ['Bibliotecario'] } },
+      { path: 'multas', component: Multas, data: { roles: ['Bibliotecario'] } },
+      { path: 'mis-cursos', component: MisCursos, data: { roles: ['Maestro'] } },
       { path: 'nomina/:id', component: Nomina, data: { roles: ['Super Admin', 'Maestro'] } },
       { path: 'asistencia/:id', component: AsistenciaTomar, data: { roles: ['Super Admin', 'Maestro'] } },
       { path: 'historial-asistencia/:id', component: HistorialAsistencia, data: { roles: ['Super Admin', 'Maestro'] } },

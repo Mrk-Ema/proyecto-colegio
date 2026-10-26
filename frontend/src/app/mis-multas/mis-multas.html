@@ -1,0 +1,59 @@
+<h3>Mis multas</h3>
+<div class="alert alert-info">Solo lectura de tus propias multas.</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <select class="form-select" [(ngModel)]="filtroEstado" (change)="filtrar()">
+          <option value="">Todos</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Pagada">Pagada</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (!datos.length && !error) {
+  <div class="alert alert-info">No tienes multas registradas.</div>
+}
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Libro</th>
+      <th>Días de atraso</th>
+      <th>Monto</th>
+      <th>Estado</th>
+      <th>Fecha de pago</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (f of datos; track f.idMulta) {
+      <tr>
+        <td>{{ f.libro }}</td>
+        <td>{{ f.diasAtraso }}</td>
+        <td>{{ f.monto | number: '1.2-2' }}</td>
+        <td>
+          <span
+            class="badge"
+            [class.text-bg-warning]="f.estado === 'Pendiente'"
+            [class.text-bg-success]="f.estado === 'Pagada'"
+            >{{ f.estado }}</span
+          >
+        </td>
+        <td>{{ f.fechaPago ?? '—' }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+  <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+  <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+</div>

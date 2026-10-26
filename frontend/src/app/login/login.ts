@@ -28,7 +28,7 @@ export class Login {
   }
 
   private rutaPorRol(rol: string): string {
-    if (rol === 'Super Admin' || rol === 'Admin') return '/usuarios';
+    if (rol === 'Super Admin' || rol === 'Admin') return '/estudiantes';
     return '/inicio';
   }
 }

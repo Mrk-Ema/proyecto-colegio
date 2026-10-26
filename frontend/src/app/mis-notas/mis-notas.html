@@ -1,0 +1,78 @@
+<h3>Mis notas</h3>
+<div class="alert alert-info">Solo lectura de tus propias notas.</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <select class="form-select" [(ngModel)]="anio" (change)="cargar()">
+          <option [ngValue]="null">Año lectivo</option>
+          @for (a of anios; track a) {
+            <option [ngValue]="a">{{ a }}</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="curso" (change)="cargar()">
+          <option [ngValue]="null">Todos los cursos</option>
+          @for (c of datos?.cursos ?? []; track c.idCurso) {
+            <option [ngValue]="c.idCurso">{{ c.curso }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (!datos) {
+  <div class="alert alert-info">Cargando...</div>
+} @else if (!datos.cursos.length) {
+  <div class="alert alert-info">No tienes notas registradas en este año.</div>
+} @else {
+  @for (c of datos.cursos; track c.idAsignacion) {
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h5 class="mb-2">{{ c.curso }} <small class="text-muted">{{ c.grado }} — {{ c.seccion }}</small></h5>
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>Actividad</th>
+              <th class="text-center">Puntos</th>
+              <th class="text-center">Nota</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of c.actividades; track a.idActividadEvaluable) {
+              <tr>
+                <td>{{ a.nombre }}</td>
+                <td class="text-center">{{ a.puntos }}</td>
+                <td class="text-center">
+                  @if (c.notas[a.idActividadEvaluable] !== undefined) {
+                    {{ c.notas[a.idActividadEvaluable].valor | number: '1.2-2' }}
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr class="fw-bold">
+              <td>Total</td>
+              <td class="text-center">{{ c.totalActividades }}</td>
+              <td class="text-center">{{ c.total | number: '1.2-2' }}</td>
+            </tr>
+            <tr class="fw-bold">
+              <td>Promedio</td>
+              <td class="text-center" colspan="2">{{ c.promedio | number: '1.2-2' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  }
+}

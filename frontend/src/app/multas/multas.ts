@@ -77,6 +77,6 @@ export class Multas implements OnInit {
 
   puedeEditar(): boolean {
     const rol = localStorage.getItem('rol') ?? '';
-    return rol === 'Bibliotecario' || rol === 'Super Admin';
+    return rol === 'Bibliotecario';
   }
 }
