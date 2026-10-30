@@ -1,0 +1,81 @@
+<h3>Reporte de préstamos en mora</h3>
+<div class="alert alert-info">
+  Muestra los préstamos Activos vencidos (fecha esperada anterior a hoy) con días de atraso y recargo
+  calculado con los parámetros de biblioteca. Solo préstamos Activos vencidos.
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <label class="form-label">Desde (vencimiento)</label>
+        <input class="form-control" type="date" [(ngModel)]="filtroDesde" />
+      </div>
+      <div class="col">
+        <label class="form-label">Hasta (vencimiento)</label>
+        <input class="form-control" type="date" [(ngModel)]="filtroHasta" />
+      </div>
+      <div class="col">
+        <label class="form-label">ID del libro</label>
+        <input class="form-control" type="number" [(ngModel)]="filtroLibro" />
+      </div>
+      <div class="col-auto" style="align-self: end">
+        <button class="btn btn-secondary" (click)="filtrar()">
+          <i class="bi bi-search me-1"></i>Filtrar
+        </button>
+      </div>
+      <div class="col-auto" style="align-self: end">
+        <button class="btn btn-outline-secondary" (click)="limpiar()">Limpiar</button>
+      </div>
+      <div class="col-auto" style="align-self: end">
+        <button class="btn btn-primary" (click)="exportarPdf()" [disabled]="exportando || cargando">
+          <i class="bi bi-file-pdf me-1"></i>Exportar a PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (aviso) {
+  <div class="alert alert-success">{{ aviso }}</div>
+}
+@if (!datos.length && !error) {
+  <div class="alert alert-info">No hay préstamos en mora con esos filtros.</div>
+}
+
+@if (datos.length) {
+  <div class="text-muted small mb-2">
+    Multa por día: {{ multaPorDia | number: '1.2-2' }} | Total: {{ total }}
+  </div>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Prestatario</th>
+        <th>Libro</th>
+        <th>Fecha esperada</th>
+        <th class="text-center">Días de atraso</th>
+        <th class="text-end">Recargo</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (f of datos; track f.idPrestamo) {
+        <tr>
+          <td>{{ f.prestatario }}</td>
+          <td>{{ f.libro }}</td>
+          <td>{{ f.fechaEsperada }}</td>
+          <td class="text-center">{{ f.diasAtraso }}</td>
+          <td class="text-end">{{ f.recargo | number: '1.2-2' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="d-flex gap-2 align-items-center">
+    <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+    <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+    <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+  </div>
+}

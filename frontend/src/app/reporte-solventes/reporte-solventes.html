@@ -1,0 +1,106 @@
+<h3>Reporte de alumnos solventes y morosos</h3>
+<div class="alert alert-info">
+  Compara las cuotas de inscripción y las mensualidades transcurridas contra los pagos registrados.
+  El estado es Solvente si el saldo es cero, Moroso si tiene deuda pendiente.
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col">
+        <select class="form-select" [(ngModel)]="anio" (change)="cargar()">
+          @for (a of anios; track a.anio) {
+            <option [ngValue]="a.anio">{{ a.anio }} ({{ a.estado }})</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="grado" (change)="cargarSecciones(); filtrar()">
+          <option [ngValue]="null">Todos los grados</option>
+          @for (g of grados; track g.idGrado) {
+            <option [ngValue]="g.idGrado">{{ g.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="col">
+        <select class="form-select" [(ngModel)]="seccion" (change)="filtrar()">
+          <option [ngValue]="null">Todas las secciones</option>
+          @for (s of secciones; track s.idSeccion) {
+            <option [ngValue]="s.idSeccion">{{ s.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-secondary" (click)="filtrar()">
+          <i class="bi bi-search me-1"></i>Filtrar
+        </button>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-outline-secondary" (click)="limpiar()">Limpiar</button>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" (click)="exportarPdf()" [disabled]="exportando || cargando">
+          <i class="bi bi-file-pdf me-1"></i>Exportar a PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+}
+@if (!datos.length && !error && !cargando) {
+  <div class="alert alert-info">No hay estudiantes con esos filtros.</div>
+}
+
+@if (datos.length) {
+  <div class="text-muted small mb-2">
+    Meses transcurridos: {{ mesesTranscurridos }} | Total estudiantes: {{ total }}
+  </div>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Carnet</th>
+        <th>Estudiante</th>
+        <th>Grado</th>
+        <th>Sección</th>
+        <th class="text-end">Inscripción</th>
+        <th class="text-end">Mensualidades</th>
+        <th class="text-end">Adeudado</th>
+        <th class="text-end">Pagado</th>
+        <th class="text-end">Saldo</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (f of datos; track f.idEstudiante) {
+        <tr>
+          <td>{{ f.carnet }}</td>
+          <td>{{ f.nombres }} {{ f.apellidos }}</td>
+          <td>{{ f.grado }}</td>
+          <td>{{ f.seccion }}</td>
+          <td class="text-end">{{ f.montoInscripcion | number: '1.2-2' }}</td>
+          <td class="text-end">{{ f.mensualidades | number: '1.2-2' }}</td>
+          <td class="text-end">{{ f.totalAdeudado | number: '1.2-2' }}</td>
+          <td class="text-end">{{ f.totalPagado | number: '1.2-2' }}</td>
+          <td class="text-end" [class.text-danger]="f.saldo > 0">{{ f.saldo | number: '1.2-2' }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.text-bg-success]="f.estado === 'Solvente'"
+              [class.text-bg-danger]="f.estado === 'Moroso'"
+              >{{ f.estado }}</span
+            >
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="d-flex gap-2 align-items-center">
+    <button class="btn btn-sm btn-outline-primary" (click)="anterior()">Anterior</button>
+    <span>Pág {{ page }} de {{ totalPaginas }} ({{ total }})</span>
+    <button class="btn btn-sm btn-outline-primary" (click)="siguiente()">Siguiente</button>
+  </div>
+}

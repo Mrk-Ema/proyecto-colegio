@@ -41,6 +41,11 @@ import { ActividadForm } from './actividad-form/actividad-form';
 import { Pagos } from './pagos/pagos';
 import { PagoForm } from './pago-form/pago-form';
 import { Solvencias } from './solvencias/solvencias';
+import { ReporteSolventes } from './reporte-solventes/reporte-solventes';
+import { ReporteRendimiento } from './reporte-rendimiento/reporte-rendimiento';
+import { ReporteHistorialPagos } from './reporte-historial-pagos/reporte-historial-pagos';
+import { ReporteIngresos } from './reporte-ingresos/reporte-ingresos';
+import { ReportePrestamosMora } from './reporte-prestamos-mora/reporte-prestamos-mora';
 import { MisNotas } from './mis-notas/mis-notas';
 import { MiEstadoCuenta } from './mi-estado-cuenta/mi-estado-cuenta';
 import { MisPrestamos } from './mis-prestamos/mis-prestamos';
@@ -103,6 +108,11 @@ export const routes: Routes = [
       { path: 'pagos/registrar', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'pagos/registrar/actividad', component: PagoForm, data: { roles: ['Secretaria'] } },
       { path: 'solvencias', component: Solvencias, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'reporte-solventes', component: ReporteSolventes, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'reporte-rendimiento', component: ReporteRendimiento, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'reporte-historial-pagos', component: ReporteHistorialPagos, data: { roles: ['Super Admin', 'Admin', 'Secretaria'] } },
+      { path: 'reporte-ingresos', component: ReporteIngresos, data: { roles: ['Super Admin', 'Admin'] } },
+      { path: 'reporte-prestamos-mora', component: ReportePrestamosMora, data: { roles: ['Super Admin', 'Admin', 'Bibliotecario'] } },
       { path: 'mis-notas', component: MisNotas, data: { roles: ['Estudiante'] } },
       { path: 'mi-estado-cuenta', component: MiEstadoCuenta, data: { roles: ['Estudiante'] } },
       { path: 'mis-prestamos', component: MisPrestamos, data: { roles: ['Estudiante'] } },

@@ -42,6 +42,11 @@ export class Navbar {
       { ruta: '/actividades', texto: 'Actividades', roles: ['Super Admin', 'Admin', 'Secretaria'] },
       { ruta: '/pagos', texto: 'Pagos', roles: ['Super Admin', 'Admin', 'Secretaria'] },
       { ruta: '/solvencias', texto: 'Solvencias', roles: ['Super Admin', 'Admin', 'Secretaria'] },
+    { ruta: '/reporte-solventes', texto: 'Reporte solventes', roles: ['Super Admin', 'Admin', 'Secretaria'] },
+    { ruta: '/reporte-rendimiento', texto: 'Reporte rendimiento', roles: ['Super Admin', 'Admin'] },
+    { ruta: '/reporte-historial-pagos', texto: 'Historial de pagos', roles: ['Super Admin', 'Admin', 'Secretaria'] },
+    { ruta: '/reporte-ingresos', texto: 'Reporte de ingresos', roles: ['Super Admin', 'Admin'] },
+    { ruta: '/reporte-prestamos-mora', texto: 'Préstamos en mora', roles: ['Super Admin', 'Admin', 'Bibliotecario'] },
     ]},
     { etiqueta: 'Biblioteca', items: [
       { ruta: '/libros', texto: 'Libros', roles: ['Bibliotecario', 'Estudiante'] },
