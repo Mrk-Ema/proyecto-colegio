@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="historial-pagos"
+              language="java"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="555"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+    <parameter name="carnet" class="java.lang.String"/>
+    <parameter name="estudiante" class="java.lang.String"/>
+    <parameter name="desde" class="java.lang.String"/>
+    <parameter name="hasta" class="java.lang.String"/>
+    <parameter name="totalPagos" class="java.lang.Integer"/>
+
+    <field name="numeroCorrelativo" class="java.lang.String"/>
+    <field name="fechaPago" class="java.lang.String"/>
+    <field name="concepto" class="java.lang.String"/>
+    <field name="mes" class="java.lang.String"/>
+    <field name="monto" class="java.math.BigDecimal"/>
+    <field name="estado" class="java.lang.String"/>
+    <field name="grado" class="java.lang.String"/>
+    <field name="seccion" class="java.lang.String"/>
+
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="25"/>
+                <textElement textAlignment="Center"><font size="16" isBold="true"/></textElement>
+                <text><![CDATA[HISTORIAL DE PAGOS POR ESTUDIANTE]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="28" width="555" height="18"/>
+                <textElement textAlignment="Center"><font size="10"/></textElement>
+                <textFieldExpression><![CDATA["Estudiante: " + $P{estudiante} + " (" + $P{carnet} + ")  |  Desde: " + $P{desde} + "  |  Hasta: " + $P{hasta} + "  |  Total pagos: " + $P{totalPagos}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="22">
+            <staticText><reportElement x="0" y="0" width="100" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Número]]></text></staticText>
+            <staticText><reportElement x="100" y="0" width="110" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Fecha]]></text></staticText>
+            <staticText><reportElement x="210" y="0" width="90" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Concepto]]></text></staticText>
+            <staticText><reportElement x="300" y="0" width="70" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Mes]]></text></staticText>
+            <staticText><reportElement x="370" y="0" width="80" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Monto]]></text></staticText>
+            <staticText><reportElement x="450" y="0" width="70" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Estado]]></text></staticText>
+            <staticText><reportElement x="520" y="0" width="35" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Grado]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="18">
+            <textField><reportElement x="0" y="0" width="100" height="18"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{numeroCorrelativo}]]></textFieldExpression></textField>
+            <textField><reportElement x="100" y="0" width="110" height="18"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{fechaPago}]]></textFieldExpression></textField>
+            <textField><reportElement x="210" y="0" width="90" height="18"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression></textField>
+            <textField><reportElement x="300" y="0" width="70" height="18"/><textElement textAlignment="Center"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{mes}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="370" y="0" width="80" height="18"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression></textField>
+            <textField><reportElement x="450" y="0" width="70" height="18"/><textElement textAlignment="Center"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression></textField>
+            <textField><reportElement x="520" y="0" width="35" height="18"/><textElement textAlignment="Center"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{grado}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="5" width="555" height="20"/>
+                <textElement textAlignment="Center"><font size="8" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

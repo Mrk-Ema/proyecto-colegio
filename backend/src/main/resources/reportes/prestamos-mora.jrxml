@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="prestamos-mora"
+              language="java"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="555"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+    <parameter name="desde" class="java.lang.String"/>
+    <parameter name="hasta" class="java.lang.String"/>
+    <parameter name="multaPorDia" class="java.math.BigDecimal"/>
+    <parameter name="total" class="java.lang.Integer"/>
+
+    <field name="prestatario" class="java.lang.String"/>
+    <field name="libro" class="java.lang.String"/>
+    <field name="fechaEsperada" class="java.lang.String"/>
+    <field name="diasAtraso" class="java.lang.Integer"/>
+    <field name="recargo" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="25"/>
+                <textElement textAlignment="Center"><font size="16" isBold="true"/></textElement>
+                <text><![CDATA[REPORTE DE PRÉSTAMOS EN MORA]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="28" width="555" height="18"/>
+                <textElement textAlignment="Center"><font size="10"/></textElement>
+                <textFieldExpression><![CDATA["Vencimiento desde: " + $P{desde} + "  |  Hasta: " + $P{hasta} + "  |  Multa por día: " + $P{multaPorDia} + "  |  Total: " + $P{total}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="22">
+            <staticText><reportElement x="0" y="0" width="160" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Prestatario]]></text></staticText>
+            <staticText><reportElement x="160" y="0" width="160" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Libro]]></text></staticText>
+            <staticText><reportElement x="320" y="0" width="90" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Fecha esperada]]></text></staticText>
+            <staticText><reportElement x="410" y="0" width="70" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Días atraso]]></text></staticText>
+            <staticText><reportElement x="480" y="0" width="75" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Recargo]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="18">
+            <textField><reportElement x="0" y="0" width="160" height="18"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{prestatario}]]></textFieldExpression></textField>
+            <textField><reportElement x="160" y="0" width="160" height="18"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{libro}]]></textFieldExpression></textField>
+            <textField><reportElement x="320" y="0" width="90" height="18"/><textElement textAlignment="Center"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{fechaEsperada}]]></textFieldExpression></textField>
+            <textField><reportElement x="410" y="0" width="70" height="18"/><textElement textAlignment="Center"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{diasAtraso}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="480" y="0" width="75" height="18"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{recargo}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="5" width="555" height="20"/>
+                <textElement textAlignment="Center"><font size="8" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

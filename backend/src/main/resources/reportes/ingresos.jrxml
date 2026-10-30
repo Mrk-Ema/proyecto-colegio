@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ingresos"
+              language="java"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="555"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+    <parameter name="desde" class="java.lang.String"/>
+    <parameter name="hasta" class="java.lang.String"/>
+    <parameter name="total" class="java.math.BigDecimal"/>
+
+    <field name="concepto" class="java.lang.String"/>
+    <field name="monto" class="java.math.BigDecimal"/>
+
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="25"/>
+                <textElement textAlignment="Center"><font size="16" isBold="true"/></textElement>
+                <text><![CDATA[REPORTE DE INGRESOS]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="28" width="555" height="18"/>
+                <textElement textAlignment="Center"><font size="10"/></textElement>
+                <textFieldExpression><![CDATA["Desde: " + $P{desde} + "  |  Hasta: " + $P{hasta}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="22">
+            <staticText><reportElement x="0" y="0" width="300" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement><text><![CDATA[Concepto]]></text></staticText>
+            <staticText><reportElement x="300" y="0" width="255" height="22" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="10" isBold="true"/></textElement><text><![CDATA[Monto]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField><reportElement x="0" y="0" width="300" height="20"/><textElement><font size="10"/></textElement><textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="300" y="0" width="255" height="20"/><textElement textAlignment="Right"><font size="10"/></textElement><textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="5" width="555" height="20"/>
+                <textElement textAlignment="Center"><font size="8" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+
+    <summary>
+        <band height="30">
+            <staticText><reportElement x="0" y="5" width="300" height="20"/><textElement><font size="11" isBold="true"/></textElement><text><![CDATA[TOTAL BRUTO]]></text></staticText>
+            <textField pattern="#,##0.00"><reportElement x="300" y="5" width="255" height="20"/><textElement textAlignment="Right"><font size="11" isBold="true"/></textElement><textFieldExpression><![CDATA[$P{total}]]></textFieldExpression></textField>
+        </band>
+    </summary>
+</jasperReport>

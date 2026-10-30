@@ -177,8 +177,7 @@ public class LibroResource {
     private boolean esBibliotecarioOAdmin(ContainerRequestContext req) {
         Object rol = req.getProperty("rol");
         // El Estudiante también puede listar libros (CU079)
-        return "Bibliotecario".equals(rol) || "Super Admin".equals(rol)
-                || "Admin".equals(rol) || "Secretaria".equals(rol) || "Estudiante".equals(rol);
+        return "Bibliotecario".equals(rol) || "Super Admin".equals(rol) || "Estudiante".equals(rol);
     }
 
     private Response prohibido() {

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="solventes-morosos"
+              language="java"
+              pageWidth="842"
+              pageHeight="595"
+              orientation="Landscape"
+              columnWidth="802"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20">
+
+    <parameter name="anio" class="java.lang.String"/>
+    <parameter name="mesesTranscurridos" class="java.lang.Integer"/>
+    <parameter name="totalEstudiantes" class="java.lang.Integer"/>
+
+    <field name="carnet" class="java.lang.String"/>
+    <field name="estudiante" class="java.lang.String"/>
+    <field name="grado" class="java.lang.String"/>
+    <field name="seccion" class="java.lang.String"/>
+    <field name="inscripcion" class="java.math.BigDecimal"/>
+    <field name="mensualidades" class="java.math.BigDecimal"/>
+    <field name="adeudado" class="java.math.BigDecimal"/>
+    <field name="pagado" class="java.math.BigDecimal"/>
+    <field name="saldo" class="java.math.BigDecimal"/>
+    <field name="estado" class="java.lang.String"/>
+
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="802" height="25"/>
+                <textElement textAlignment="Center"><font size="16" isBold="true"/></textElement>
+                <text><![CDATA[REPORTE DE ALUMNOS SOLVENTES Y MOROSOS]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="28" width="802" height="18"/>
+                <textElement textAlignment="Center"><font size="10"/></textElement>
+                <textFieldExpression><![CDATA["Año lectivo: " + $P{anio} + "  |  Meses transcurridos: " + $P{mesesTranscurridos} + "  |  Total estudiantes: " + $P{totalEstudiantes}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="25">
+            <staticText><reportElement x="0" y="0" width="90" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Carnet]]></text></staticText>
+            <staticText><reportElement x="90" y="0" width="150" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Estudiante]]></text></staticText>
+            <staticText><reportElement x="240" y="0" width="90" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Grado]]></text></staticText>
+            <staticText><reportElement x="330" y="0" width="70" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Sección]]></text></staticText>
+            <staticText><reportElement x="400" y="0" width="80" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Inscripción]]></text></staticText>
+            <staticText><reportElement x="480" y="0" width="80" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Mensualidades]]></text></staticText>
+            <staticText><reportElement x="560" y="0" width="80" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Adeudado]]></text></staticText>
+            <staticText><reportElement x="640" y="0" width="80" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Pagado]]></text></staticText>
+            <staticText><reportElement x="720" y="0" width="82" height="25" mode="Opaque" backcolor="#D9E2F3"/><textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement><text><![CDATA[Saldo]]></text></staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField><reportElement x="0" y="0" width="90" height="20"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{carnet}]]></textFieldExpression></textField>
+            <textField><reportElement x="90" y="0" width="150" height="20"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{estudiante}]]></textFieldExpression></textField>
+            <textField><reportElement x="240" y="0" width="90" height="20"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{grado}]]></textFieldExpression></textField>
+            <textField><reportElement x="330" y="0" width="70" height="20"/><textElement textAlignment="Center"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{seccion}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="400" y="0" width="80" height="20"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{inscripcion}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="480" y="0" width="80" height="20"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{mensualidades}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="560" y="0" width="80" height="20"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{adeudado}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="640" y="0" width="80" height="20"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{pagado}]]></textFieldExpression></textField>
+            <textField pattern="#,##0.00"><reportElement x="720" y="0" width="82" height="20"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="5" width="802" height="20"/>
+                <textElement textAlignment="Center"><font size="8" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>
